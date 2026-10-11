@@ -1,0 +1,6 @@
+index	label	original_label	network_id	group	atlas_name	coverage_type	volume_mm3	midbrain_nucleus	x_mm	y_mm	z_mm	degree	strength	incident_streamline_count	component	in_spectral_analysis	reason
+113	Cerebelum_3_L	Cerebelum_3_L	10	cerebellum	AAL	gray_parcel_coverage	1064.0	False	-7.783834586466165	-37.2687969924812	-18.61278195488721	0	0.0	0	1	False	healthy_zero_degree_no_spectral_support
+125	Cerebelum_10_L	Cerebelum_10_L	10	cerebellum	AAL	gray_parcel_coverage	1187.0	False	-21.560235888795283	-33.83066554338669	-41.772535804549285	0	0.0	0	2	False	healthy_zero_degree_no_spectral_support
+127	Vermis_1_2	Vermis_1_2	10	cerebellum	AAL	gray_parcel_coverage	398.0	False	1.7512562814070352	-38.88944723618091	-20.155778894472363	0	0.0	0	3	False	healthy_zero_degree_no_spectral_support
+133	Vermis_9	Vermis_9	10	cerebellum	AAL	gray_parcel_coverage	1362.0	False	1.829662261380323	-54.8575624082232	-34.88325991189427	0	0.0	0	4	False	healthy_zero_degree_no_spectral_support
+134	Vermis_10	Vermis_10	10	cerebellum	AAL	gray_parcel_coverage	861.0	False	1.3902439024390243	-45.7479674796748	-31.77003484320557	0	0.0	0	5	False	healthy_zero_degree_no_spectral_support

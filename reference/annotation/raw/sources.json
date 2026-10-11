@@ -1,0 +1,22 @@
+{
+  "commits": {
+    "hansen": "f8b41da92a733f99368c1f39d4959731aa1316c1",
+    "cbig": "634f676630929a71297852d01dd92a287103e861",
+    "brainspace": "8730de88ae32c4f88eeaf16ef2a6e53c5c32dc34"
+  },
+  "urls": {
+    "receptors.csv": "https://raw.githubusercontent.com/netneurolab/hansen_receptors/f8b41da92a733f99368c1f39d4959731aa1316c1/results/receptor_data_scale100.csv",
+    "receptor_names.npy": "https://raw.githubusercontent.com/netneurolab/hansen_receptors/f8b41da92a733f99368c1f39d4959731aa1316c1/data/receptor_names_pet.npy",
+    "neurosynth.csv": "https://raw.githubusercontent.com/netneurolab/hansen_receptors/f8b41da92a733f99368c1f39d4959731aa1316c1/data/neurosynth/ns_scale100.csv",
+    "centres.txt": "https://raw.githubusercontent.com/netneurolab/hansen_receptors/f8b41da92a733f99368c1f39d4959731aa1316c1/data/schaefer/coordinates/Schaefer_100_centres.txt",
+    "hansen_license.txt": "https://raw.githubusercontent.com/netneurolab/hansen_receptors/f8b41da92a733f99368c1f39d4959731aa1316c1/LICENSE.md",
+    "cognition.py": "https://raw.githubusercontent.com/netneurolab/hansen_receptors/f8b41da92a733f99368c1f39d4959731aa1316c1/code/cognition.py",
+    "parcellate.py": "https://raw.githubusercontent.com/netneurolab/hansen_receptors/f8b41da92a733f99368c1f39d4959731aa1316c1/code/parcellate.py",
+    "schaefer.nii.gz": "https://raw.githubusercontent.com/ThomasYeoLab/CBIG/634f676630929a71297852d01dd92a287103e861/stable_projects/brain_parcellation/Schaefer2018_LocalGlobal/Parcellations/MNI/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_1mm.nii.gz",
+    "labels.txt": "https://raw.githubusercontent.com/ThomasYeoLab/CBIG/634f676630929a71297852d01dd92a287103e861/stable_projects/brain_parcellation/Schaefer2018_LocalGlobal/Parcellations/MNI/freeview_lut/Schaefer2018_100Parcels_7Networks_order.txt",
+    "cbig_license.txt": "https://raw.githubusercontent.com/ThomasYeoLab/CBIG/634f676630929a71297852d01dd92a287103e861/LICENSE.md",
+    "brainspace_moran.py": "https://raw.githubusercontent.com/MICA-MNI/BrainSpace/8730de88ae32c4f88eeaf16ef2a6e53c5c32dc34/brainspace/null_models/moran.py",
+    "brainspace_license.txt": "https://raw.githubusercontent.com/MICA-MNI/BrainSpace/8730de88ae32c4f88eeaf16ef2a6e53c5c32dc34/LICENSE",
+    "make_receptor_matrix.py": "https://raw.githubusercontent.com/netneurolab/hansen_receptors/f8b41da92a733f99368c1f39d4959731aa1316c1/code/make_receptor_matrix.py"
+  }
+}

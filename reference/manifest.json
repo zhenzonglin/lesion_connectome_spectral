@@ -1,0 +1,28 @@
+{
+  "reference_id": "bd8b1099ad4c4c249a22297ea0e528266a46a70e879ea7ae0a026b8a87c7982c",
+  "files": {
+    "labels.tsv": "ddabc214cb40d60da9ea518901f536ab7092de79c881253a680232fb6b31804b",
+    "spectral_checks.json": "e268ba8991e6a8593b51f1a9f9902ca7565827ccf723ab3b497042c45d1d2a04",
+    "label_audit.tsv": "533482ff3bca34c40ecc12ad005fb02629227c38d7dc069fb8a24c41c4eb9d76",
+    "atlas_sources.json": "cfd2364028562e16cf7ae24bb24b8942b200fd5dcd6b81fa9dfb3c1caaa5fdf5",
+    "nodes.tsv": "fbd4ede6d40508d36744c64dd5bb52fd8f8f4204a01df1a591b6e64149415ce6",
+    "lqt_dsi_version.txt": "cb8e90372d248b7566730a2e8f34313b6cae5ada42c56e812459213f1cf0687a",
+    "template.nii.gz": "d1f03e160c2548592a01d98d44d7e0ffa8a8ef58bc9b07d26369e214ba170edb",
+    "sc.npz": "aba113d4271b7b297740d304fc2505f1687118f39a2c59c75a3641180645c532",
+    "lqt_sources.json": "43cb2ccf6f652276fb82b3c793089e88f0736111b3ad17cfdc4034dc6832a92d",
+    "atlas_lqt.nii.gz": "f722062e3393cd7e123de5567f18c04134e14f9e38d72ca3b8f46be4b3b93e90",
+    "gpl.txt": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903",
+    "endpoint_audit.json": "5d9fb3532ad08e3bdec16241baaa8cb6def1b7df229aa0ed4c92cee98e03b54c",
+    "analysis_nodes.tsv": "193e41ac902f2f4feb245260d6dfd17720cf84facd8d38be87336fade3962b45",
+    "lqt_license_readme.txt": "00b39a318b5d40b9085e7ae1efb1b7dfcd3a8c5dd60e2fc9547fff154497b38a",
+    "atlas.nii.gz": "1fc6aaba5f82da9f41024c821764aebeec405de8490a221dcb289c249a99656d",
+    "excluded_nodes.tsv": "9bfe80eaecd9cc305ae066d7a677525798372307859f7233a293c6b9c39c87df",
+    "endpoint_coverage.csv": "e3e89dab9fc2a4409da25cc60603f7c60daf52177842e4a1fa695527ffce5765",
+    "graph_checks.json": "797fac8615f6563b849b6436928f2b1b9c008ff6afc6c37440e6e368f57ac4b7",
+    "index_build.json": "10007e53713a05ed750d18d90eb0bab4db96adcd0d010e22bedbe554ffe363e1",
+    "endpoint_counts.tsv": "96b62456833b9919e0c5d0c576cf9b115dca8d424f953a31c2076bf441e430b9",
+    "spectrum.csv": "9dfd5306482dc575d107f23d9c0dd89e50753a12467d2c814ff4427582dd2c1b",
+    "tracks.h5": "ad3fdba88a2c6a6514f9460f161040f00e384e1f16bc082c3d85fd13ae8b63c4",
+    "modes.npz": "92f58d828128f1c5537149c1530545f98d83193855b0a996212ed904ce2c0192"
+  }
+}

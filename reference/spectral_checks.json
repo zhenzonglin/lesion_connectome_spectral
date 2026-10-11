@@ -1,0 +1,19 @@
+{
+  "nodes_total": 135,
+  "spectral_nodes": 130,
+  "excluded_nodes": 5,
+  "scope_adjustment_authorized": true,
+  "modes_total": 130,
+  "nonzero_modes": 129,
+  "zero_modes": 1,
+  "max_relative_residual": 2.400820223288032e-15,
+  "orthogonality_error": 1.849827416653764e-13,
+  "all_modes_retained": true,
+  "low20_effective_nodes_median": 24.752823042757377,
+  "low20_mean_loading": {
+    "cortex": 0.7350313709071784,
+    "subcortex": 0.01989343260716361,
+    "cerebellum": 0.23824734290216293,
+    "brainstem": 0.006827853583495379
+  }
+}

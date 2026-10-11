@@ -1,0 +1,5 @@
+group,nodes,incident_streamline_count,minimum_degree,minimum_strength,isolated_nodes
+cortex,100,145634,2,0.0011440357222326357,0
+subcortex,8,11505,18,0.016987782105777935,0
+cerebellum,26,11324,0,0.0,5
+brainstem,1,14641,81,0.23427756762702728,0

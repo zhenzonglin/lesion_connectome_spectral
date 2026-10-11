@@ -1,0 +1,21 @@
+{
+  "engineering_status": "passed",
+  "clinical_analysis_status": "not_started_missing_real_inputs",
+  "python_tests": 48,
+  "imaging_subjects": 3,
+  "w_max_difference": 0.0,
+  "independent_relocation": "passed",
+  "clinical_resource_limitation": "Hansen VAChT original map restricted",
+  "reference_bytes_with_healthy_images": 262147360,
+  "offline_runtime_bytes": 748303650,
+  "per_subject_bytes": [
+    8276,
+    8257,
+    8275
+  ],
+  "per_subject_seconds": [
+    4.535607366000477,
+    4.133642947002954,
+    4.124280477000866
+  ]
+}

@@ -1,0 +1,1010 @@
+{
+  "package": "neurosynth 0.3.8",
+  "database_commit": "e8f27c4",
+  "database_sha256": "0415ec809e3341822cfaf6f3a8dabc10b64aacd84b5dda3d58262b7ffdbfdf82",
+  "sphere_radius_mm": 6,
+  "term_threshold": 0.001,
+  "map": "association-test_z, unthresholded",
+  "terms": [
+    "action",
+    "adaptation",
+    "addiction",
+    "anticipation",
+    "anxiety",
+    "arousal",
+    "association",
+    "attention",
+    "autobiographical_memory",
+    "balance",
+    "belief",
+    "categorization",
+    "cognitive_control",
+    "communication",
+    "competition",
+    "concept",
+    "consciousness",
+    "consolidation",
+    "context",
+    "coordination",
+    "decision",
+    "decision_making",
+    "detection",
+    "discrimination",
+    "distraction",
+    "eating",
+    "efficiency",
+    "effort",
+    "emotion",
+    "emotion_regulation",
+    "empathy",
+    "encoding",
+    "episodic_memory",
+    "expectancy",
+    "expertise",
+    "extinction",
+    "face_recognition",
+    "facial_expression",
+    "familiarity",
+    "fear",
+    "fixation",
+    "focus",
+    "gaze",
+    "goal",
+    "hyperactivity",
+    "imagery",
+    "impulsivity",
+    "induction",
+    "inference",
+    "inhibition",
+    "insight",
+    "integration",
+    "intelligence",
+    "intention",
+    "interference",
+    "judgment",
+    "knowledge",
+    "language",
+    "language_comprehension",
+    "learning",
+    "listening",
+    "localization",
+    "loss",
+    "maintenance",
+    "manipulation",
+    "meaning",
+    "memory",
+    "memory_retrieval",
+    "mental_imagery",
+    "monitoring",
+    "mood",
+    "morphology",
+    "motor_control",
+    "movement",
+    "multisensory",
+    "naming",
+    "navigation",
+    "object_recognition",
+    "pain",
+    "perception",
+    "planning",
+    "priming",
+    "psychosis",
+    "reading",
+    "reasoning",
+    "recall",
+    "recognition",
+    "rehearsal",
+    "reinforcement_learning",
+    "response_inhibition",
+    "response_selection",
+    "retention",
+    "retrieval",
+    "reward_anticipation",
+    "rhythm",
+    "risk",
+    "rule",
+    "salience",
+    "search",
+    "selective_attention",
+    "semantic_memory",
+    "sentence_comprehension",
+    "skill",
+    "sleep",
+    "social_cognition",
+    "spatial_attention",
+    "speech_perception",
+    "speech_production",
+    "strategy",
+    "strength",
+    "stress",
+    "sustained_attention",
+    "task_difficulty",
+    "thought",
+    "timing",
+    "uncertainty",
+    "updating",
+    "utility",
+    "valence",
+    "verbal_fluency",
+    "visual_attention",
+    "visual_perception",
+    "word_recognition",
+    "working_memory"
+  ],
+  "actual_terms": 124,
+  "publisher_readme_terms": 123,
+  "terms_note": "发布CSV实际含124术语，不任意删列凑成README的123",
+  "original_parcellation_correlations_with_published": [
+    0.9999999999984365,
+    0.9999999999903632,
+    0.999999999987069,
+    0.9999999999780288,
+    0.9999999999937585,
+    0.9999999999930222,
+    0.9999999999954808,
+    0.9999999999971372,
+    0.9999999999964241,
+    0.9999999999900723,
+    0.9999999999913385,
+    0.9999999999899147,
+    0.9999999999981313,
+    0.9999999999960685,
+    0.9999999999913298,
+    0.9999999999925308,
+    0.9999999999817741,
+    0.9999999999835378,
+    0.9999999999926462,
+    0.9999999999952419,
+    0.9999999999959582,
+    0.9999999999964887,
+    0.9999999999948435,
+    0.9999999999922959,
+    0.9999999999914684,
+    0.9999999999930073,
+    0.9999999999907234,
+    0.9999999999896554,
+    0.9999999999933337,
+    0.9999999999928147,
+    0.999999999993848,
+    0.9999999999957526,
+    0.9999999999972626,
+    0.9999999999913348,
+    0.9999999999823181,
+    0.9999999999864922,
+    0.9999999999910774,
+    0.9999999999887171,
+    0.9999999999938214,
+    0.9999999999926102,
+    0.9999999999917317,
+    0.9999999999833666,
+    0.9999999999938355,
+    0.9999999999928159,
+    0.9999999999817271,
+    0.9999999999968403,
+    0.9999999999937184,
+    0.9999999999931757,
+    0.9999999999867376,
+    0.9999999999965054,
+    0.999999999988073,
+    0.9999999999964659,
+    0.9999999999843725,
+    0.9999999999930687,
+    0.9999999999975255,
+    0.9999999999960144,
+    0.9999999999955409,
+    0.999999999998754,
+    0.9999999999972745,
+    0.9999999999895355,
+    0.9999999999965349,
+    0.9999999999922953,
+    0.9999999999926361,
+    0.9999999999963459,
+    0.9999999999949617,
+    0.999999999994907,
+    0.9999999999986818,
+    0.9999999999960956,
+    0.9999999999922874,
+    0.999999999994894,
+    0.9999999999913752,
+    0.999999999976808,
+    0.9999999999963645,
+    0.9999999999986481,
+    0.9999999999976843,
+    0.9999999999969923,
+    0.9999999999958827,
+    0.9999999999946819,
+    0.999999999998568,
+    0.9999999999974896,
+    0.9999999999980789,
+    0.9999999999862793,
+    0.9999999999881725,
+    0.9999999999958551,
+    0.9999999999954464,
+    0.9999999999960417,
+    0.9999999999971443,
+    0.9999999999930724,
+    0.9999999999783385,
+    0.9999999999944205,
+    0.99999999999048,
+    0.9999999999825654,
+    0.9999999999981903,
+    0.9999999999686786,
+    0.999999999994453,
+    0.9999999999952941,
+    0.999999999994589,
+    0.9999999999966189,
+    0.9999999999886479,
+    0.9999999999880346,
+    0.9999999999968309,
+    0.9999999999912154,
+    0.9999999999925723,
+    0.9999999999881305,
+    0.9999999999946868,
+    0.9999999999956293,
+    0.9999999999961494,
+    0.999999999997696,
+    0.9999999999950742,
+    0.9999999999922297,
+    0.9999999999921632,
+    0.9999999999666396,
+    0.9999999999964095,
+    0.9999999999945444,
+    0.9999999999888728,
+    0.9999999999845962,
+    0.99999999999231,
+    0.9999999999688539,
+    0.999999999992351,
+    0.9999999999831123,
+    0.9999999999918012,
+    0.9999999999905611,
+    0.9999999999919557,
+    0.9999999999976906
+  ],
+  "sources": [
+    {
+      "term": "action",
+      "selected_studies": 886,
+      "sha256": "c36220ed5b11cd8598333a77509e5067c3d1ba10de6f7371e394043265385a66",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "adaptation",
+      "selected_studies": 308,
+      "sha256": "2c04eb64f98e88de3f5dd415070bcf9e7b2f630d79b4c93c7d30ebbd08dadba4",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "addiction",
+      "selected_studies": 135,
+      "sha256": "1aa2ae5491bc09e90707b0c4d3591da24b961ba169ab455a1195d6a089eda661",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "anticipation",
+      "selected_studies": 301,
+      "sha256": "c273dc54fa00980686476e9483f63e0db69e37d18bc04e12c895b42c04e2b65a",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "anxiety",
+      "selected_studies": 449,
+      "sha256": "fe54d917c2ac077b810be6c0769ad34b7c0ea19406eb8761ed0bdf69494e082e",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "arousal",
+      "selected_studies": 295,
+      "sha256": "4cc66e0d2aa2e291ad6eeae54639c163054ba91df91722992dc6ab81b033a382",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "association",
+      "selected_studies": 880,
+      "sha256": "389002e84defe4b1072e81336408c0d87cda73596105db7b1234029ea4dae232",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "attention",
+      "selected_studies": 1831,
+      "sha256": "9c045c9cc092cd75c6e6f701dc5ed5a12704fe2e13a14da4a4fa1dc3c0fa804b",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "autobiographical_memory",
+      "selected_studies": 84,
+      "sha256": "ab5c6e35648dab94543beb2a19b27b70ed63fcfdfc6cf5a26cc6cd8180916386",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "balance",
+      "selected_studies": 99,
+      "sha256": "66f004263e438efe326135231a79b0eda97b50179186f3b430e4c1afec1e2bd1",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "belief",
+      "selected_studies": 83,
+      "sha256": "8e320449a8624c330bf9ab08b3599e43d7a679e8601ead7fc88296bba3423c78",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "categorization",
+      "selected_studies": 163,
+      "sha256": "13f856fe3669a80142f2517537121ac70c4fc3079b50203b4c8da5b373c21c7b",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "cognitive_control",
+      "selected_studies": 598,
+      "sha256": "539b9fb4ba1a0bbda44f3c43ee7d094daa6072035d3b706216ebc5cf37ea3962",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "communication",
+      "selected_studies": 271,
+      "sha256": "86cd1f1785ea8c97a09aafe52d14d7e2114db067b568579b8244d19b409284c1",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "competition",
+      "selected_studies": 129,
+      "sha256": "ca43bda0bc3d2d0aa4219a2c02fdfb4ec83f0b623c4461fbc318c9c6ffc515cf",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "concept",
+      "selected_studies": 170,
+      "sha256": "27b7c0b25b00a140acc9ab1eefd17575bb9a54a6d6677f6ea18d925a8c3756cc",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "consciousness",
+      "selected_studies": 74,
+      "sha256": "22c91f644e2e87343a7554eb3869d73b5f24c8e2ccaa482ce3e4740a49e5f55e",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "consolidation",
+      "selected_studies": 87,
+      "sha256": "555f85daa3393f6d40674593d473c484e5ccabe497e1377f972da461c10a121c",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "context",
+      "selected_studies": 986,
+      "sha256": "6bf319c4b92c032caa5223ae5fcca9f8fd29d5f080a68ffb2d2d956e946b45e2",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "coordination",
+      "selected_studies": 150,
+      "sha256": "ec762c08f869064f1d304b6d69266c3bd8c5bc0c1ce7ca6bea4f6f06d9aa2748",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "decision",
+      "selected_studies": 800,
+      "sha256": "a08b43838504f1edf9e16d55e5b509361a28a1fdb5aeace36b7ee1ad96480cb4",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "decision_making",
+      "selected_studies": 509,
+      "sha256": "10690246c1d640b23f20d971969709d1fa6aa13ff5b34f3001416db81be24df8",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "detection",
+      "selected_studies": 604,
+      "sha256": "292e95d6471de6fd58f0159c596e5e8fa37086fc992ae61cb0a36f3b519c97d5",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "discrimination",
+      "selected_studies": 346,
+      "sha256": "51c36603cb02d97b611f619cf28efa87a71fb070cb9adfb09778d0ae213c26f7",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "distraction",
+      "selected_studies": 85,
+      "sha256": "e3b026168649c045b991f4bf4f24d634d133e41cf762d08ea181fa244b74d855",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "eating",
+      "selected_studies": 102,
+      "sha256": "15d5a47f0bbe9a706f7858fce1b48e4ea2121376cceab4d3a5f39ad0497f4415",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "efficiency",
+      "selected_studies": 244,
+      "sha256": "56fdc46f181c764b61d011485a79cf4ed45178d1c0c070c8fecba0cb9b3e9e3d",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "effort",
+      "selected_studies": 204,
+      "sha256": "8b8d63ce500fe28a3aaa06617d8bf7aafb9cf113b1a6ec1f4ef257552ac2fd08",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "emotion",
+      "selected_studies": 1037,
+      "sha256": "4cb539e417608e4d50cb0f42a89369accdd5686424156d2dceb1ef53510a852a",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "emotion_regulation",
+      "selected_studies": 247,
+      "sha256": "d2745947f3780ef51d5dd75e5691dc9234415e6d029ffb684661e50a7494e09c",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "empathy",
+      "selected_studies": 187,
+      "sha256": "159ae252ce51c11aaac0e93ba4e36ca7e0577f3f08fdb228b4406edc74a59d0a",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "encoding",
+      "selected_studies": 882,
+      "sha256": "5938caf3cbf0bb929ce7cec180711eead4d833ae6eabe72506e1d2f3cfaea646",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "episodic_memory",
+      "selected_studies": 332,
+      "sha256": "c91c586c40c197d9321b9ec9a4470c975148bc710f1c8cb5e4c01008d305b8f8",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "expectancy",
+      "selected_studies": 72,
+      "sha256": "5260281adf22216651abcd0ec2475c5c076f83cb94393e3a41fa6cac35e5f42a",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "expertise",
+      "selected_studies": 92,
+      "sha256": "5d28e93fdcac479bf2dd01e0929470fbf13cdcfa8908497508b0d197e5565d50",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "extinction",
+      "selected_studies": 81,
+      "sha256": "eeaae9d9082f860db133d92fe3601c48a4c871ff35ea5ae763146145ffcc5bf7",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "face_recognition",
+      "selected_studies": 79,
+      "sha256": "f3dbf7e006d4cb527038ff3cbbc9416dc446e80a0c192ce0dfdf54ed634e4c30",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "facial_expression",
+      "selected_studies": 86,
+      "sha256": "a137d9717bdb8fc6c6f643a36f64148784b2efe65bf2dcf5020a887e349a8af1",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "familiarity",
+      "selected_studies": 188,
+      "sha256": "acb6dc7d7fdd53d64b95fd77e3b6dc6e928ed97992ee0d2e28318f569ddc2680",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "fear",
+      "selected_studies": 363,
+      "sha256": "0745303f127fdd7a1dcf285597194cb643ae95078b0303d9451c2b56e3e4d0dd",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "fixation",
+      "selected_studies": 148,
+      "sha256": "4f306390e2554826382165e809e1b1f9f5c224401904ff944b3ea0eee2a02a8a",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "focus",
+      "selected_studies": 348,
+      "sha256": "c096832c8492d3bf13a294ff8d228f0a78f8a27eaa63484f47cd3d99ba86c663",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "gaze",
+      "selected_studies": 117,
+      "sha256": "f57fa9f109ee58db8733c191da8d1a14e714bf97d306f3adf7b59af3b5e3a642",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "goal",
+      "selected_studies": 582,
+      "sha256": "e195cf314f4507d7315a9b8c27b96f0489498728cb9d0211e993929e20033e16",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "hyperactivity",
+      "selected_studies": 222,
+      "sha256": "0aaf57e76546a76277a5639e0670347c5e60251ef6b659d162a628583ce38061",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "imagery",
+      "selected_studies": 312,
+      "sha256": "b2182227603dbe02d931d9048e96953992b53c7667718f01b096e5ef4b600dc0",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "impulsivity",
+      "selected_studies": 120,
+      "sha256": "89875a02df7f976b392244e3c80712dceb877fb4d33f3b85399b820f59ab8d2f",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "induction",
+      "selected_studies": 99,
+      "sha256": "fb558b869186315963c0067d478a18ca15c98dc09050fc7ea670b805e515ed53",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "inference",
+      "selected_studies": 123,
+      "sha256": "66e1cd21e9ad3265029d1cb5f8a0721c8ba25915071e4516ae453a0358f29cff",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "inhibition",
+      "selected_studies": 601,
+      "sha256": "dd54d1f5a39dd5415b86de819f7ce239be7cf40b65a5aa4752c0e41f6863a7fc",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "insight",
+      "selected_studies": 250,
+      "sha256": "efa32017c6619d2dfae552df8a70637c312581a391fd2437a0526787f4dc5f2e",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "integration",
+      "selected_studies": 771,
+      "sha256": "abad8747ab407376469e4d5afda7257bb49344eb208cea0b497d985b579aebc1",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "intelligence",
+      "selected_studies": 116,
+      "sha256": "f553aa4652ec02b57cb6fe393e73591b1bf2197ca02ea7c1059ad218dbe6c6fe",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "intention",
+      "selected_studies": 95,
+      "sha256": "abb95f0ec603133a0fcac82983308918d40cdb0fd003a21676a6ab8d34109f0b",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "interference",
+      "selected_studies": 330,
+      "sha256": "4767c958a9db4fbfc0545171722751cc04da6edd7fa834c5b0ef1a99e6ae5161",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "judgment",
+      "selected_studies": 290,
+      "sha256": "9325c8cc68754550138c56aa08ebe661f8188f40c0e9eda6da12db6ae473ff56",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "knowledge",
+      "selected_studies": 635,
+      "sha256": "f1df3f621a243b3843569156e51e66f9da45c2c91929eac42d406dfcaccbffad",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "language",
+      "selected_studies": 1101,
+      "sha256": "5d18b6a83a9bda215d8fc47323667c2808f88105380137b1f58924d9354ba031",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "language_comprehension",
+      "selected_studies": 107,
+      "sha256": "63a17d7ef1f4866f2644615fe50478e6174e5ef642ce850d8c3ef2018db14b7b",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "learning",
+      "selected_studies": 1144,
+      "sha256": "0e43a7d89502205c7f9d6adf767d859d4d42a2cd0953fce7903870c763e6f2fc",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "listening",
+      "selected_studies": 250,
+      "sha256": "a27e1a2f8906858f39517b625660f879fb878821b31fc77182f42b643c86a5fc",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "localization",
+      "selected_studies": 180,
+      "sha256": "556aeb4a921c7b7792166be0ab546125644288dc59d96166475fa029b605585b",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "loss",
+      "selected_studies": 396,
+      "sha256": "10e380cadef4b12263a70ef8199cdbb1f499cd1ee36b4e0595b79a9fee8dac3c",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "maintenance",
+      "selected_studies": 350,
+      "sha256": "8a5789426e0d2fd9ad15d181bab22e4ea45bd0dbcc5c80ba7784eebf8b837078",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "manipulation",
+      "selected_studies": 310,
+      "sha256": "9d38950a63d5031f4aaaff548cbf4ab2979ec7ccf8892c91a1512881d68ce21b",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "meaning",
+      "selected_studies": 296,
+      "sha256": "7799bc1a9c952e6c8c720b029babf3e62c8db76bd4c4c2299896c643f8195c4b",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "memory",
+      "selected_studies": 2744,
+      "sha256": "9ce18895f9d51f6395ee0fb70e761cf122c365b6f6a69928f6db6ed34bd94c44",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "memory_retrieval",
+      "selected_studies": 228,
+      "sha256": "1c7a9821ba25fa109322dfd6d40297e313ba08da4f3eea4a81f8caf5a57e470d",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "mental_imagery",
+      "selected_studies": 84,
+      "sha256": "a6cd74b2a2e72aa8a73a88899809487f08648d3b40554accd818a7d2702d37fc",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "monitoring",
+      "selected_studies": 465,
+      "sha256": "533c1a3d4ad43d628bc7d266f7e3e0216d4df39ecbd6b82c9e0a7fbc7f356569",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "mood",
+      "selected_studies": 238,
+      "sha256": "43aa680e66ff2bfa38305dc6298b8c28b9eade576ff3712cd6b0db995c463815",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "morphology",
+      "selected_studies": 99,
+      "sha256": "54ab43c425ff1071382938e276b5692511c0cbf5c25855b5e43878fd595dd8c1",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "motor_control",
+      "selected_studies": 214,
+      "sha256": "dca0ac18e2f8e01a1665a0a15a6816c0288ea26e48da17b0bf5127d8ed334dad",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "movement",
+      "selected_studies": 670,
+      "sha256": "afe750dfa243dbf6449afcbfe62926ed8c7c6ddf5d6b5255454126da64b97ad5",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "multisensory",
+      "selected_studies": 146,
+      "sha256": "c0cf256f559c69eaf180341509f30dc231613c37aa131bc9c7f8f59d3cdf067b",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "naming",
+      "selected_studies": 179,
+      "sha256": "968f1c0b8cb31d3d4ca264b643e59c189d96cec4b28b2b009a63b2f9c9535990",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "navigation",
+      "selected_studies": 77,
+      "sha256": "f7e2a8c3cda91e8eacad558562edfb2187f1532b45f560e6a28ad6ec54d45494",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "object_recognition",
+      "selected_studies": 86,
+      "sha256": "23c344a344af593d775c3ba20cb7a10740c529020d911f508fa113288fd2f034",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "pain",
+      "selected_studies": 516,
+      "sha256": "72d505ef990a87da98bdb9c47310dfc5cb50774bbc6d15fd6b86c5da9fe62fe2",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "perception",
+      "selected_studies": 1278,
+      "sha256": "45bf4b14207d6475cd40793a04a195d469374e775064d6047ce3a7183a8f2e2a",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "planning",
+      "selected_studies": 258,
+      "sha256": "0b10ea232490672730b92e2a92f856cf4a82598a96ccdb162efff726291a2879",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "priming",
+      "selected_studies": 202,
+      "sha256": "0ed0de83f64bd21e3db6db3f525184082d98924e5fdf2fc944735f9a421911ad",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "psychosis",
+      "selected_studies": 120,
+      "sha256": "391700ba66dcf5977a831cf3f429f6a29b9b5e5f6114b2cf3eba6441bd4350da",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "reading",
+      "selected_studies": 521,
+      "sha256": "1f2f005e28d4b20216fc689f83596c4565f0060e81ee3e1da37f752683dff6d2",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "reasoning",
+      "selected_studies": 182,
+      "sha256": "8d6ef9d6c9fd4b2768fce6f1d3fab27e57067ffa67b54e1216a328399f7145c4",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "recall",
+      "selected_studies": 244,
+      "sha256": "137c2c0ad3a0a55972f4a9f2f847dc1a4e19ba8a5e809a0b5ac749ea661857a3",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "recognition",
+      "selected_studies": 1001,
+      "sha256": "05a6581e5a0dc3c7fee6ac00b40651bb5437bc55128b113b803c7d806b74644f",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "rehearsal",
+      "selected_studies": 74,
+      "sha256": "e7ffffa1928c408c52602aea0066d779c27d767e732b012be484996fb2e9e793",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "reinforcement_learning",
+      "selected_studies": 72,
+      "sha256": "178310a6d5d93ba0aa714e331f3a0aa1c47353e4d98b6b5c70f9607a5ae71c25",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "response_inhibition",
+      "selected_studies": 218,
+      "sha256": "fa49e5d9204578bb401eabf7c03f947a6f449d40dc0ff151d23a0cafff17814f",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "response_selection",
+      "selected_studies": 103,
+      "sha256": "077e8e57a754143c580742e6031e5d8b49a3f2f57347ea405823e251d44008b2",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "retention",
+      "selected_studies": 78,
+      "sha256": "7c63d9fdbd042ac01ddd5a98fef6aac714596fbe27010466ef287e3a7f9b4e1f",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "retrieval",
+      "selected_studies": 872,
+      "sha256": "7ade86eaf435c4f2dd001152e487bb8357dc0b170da9f48e97616d4a7cd2778a",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "reward_anticipation",
+      "selected_studies": 92,
+      "sha256": "acf192201880a059c9c91e4cd45fbeccfd164a8a8bb25f2485e2bd17650f1ca3",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "rhythm",
+      "selected_studies": 76,
+      "sha256": "21553d6b0f479a6b9b90a654e67dd6fd37b1d42d9841e4220998c7e9cc895c14",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "risk",
+      "selected_studies": 708,
+      "sha256": "e4189aa433728ccee253f5b4cb57f98a2e86a8d99e06e5c06c442d09e465b4a9",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "rule",
+      "selected_studies": 172,
+      "sha256": "899c4dfeac945dd7969185cdf775c4cf8615fa335d2833f109216173f4dba7b4",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "salience",
+      "selected_studies": 396,
+      "sha256": "d41e57db6777860c0199451f4a91f4f38a8723c1cd72c1a382fb246219e6f3aa",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "search",
+      "selected_studies": 219,
+      "sha256": "b3a60515ba20a0b81f8fcba2d679bbb9f4605856853657c639e4796bc60893e8",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "selective_attention",
+      "selected_studies": 146,
+      "sha256": "4f2049f5f7c2121fd8d9d7ff68bb12c7ec548ee6b4b20495ba62c5f647265ef5",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "semantic_memory",
+      "selected_studies": 123,
+      "sha256": "9b59b906e2cd16b2d11fda8ee29ccd618d8893c58591c278757bcb6574c76d13",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "sentence_comprehension",
+      "selected_studies": 77,
+      "sha256": "a7c9644b1d72e7689fd5921a1e2c76ee218026fd7f8b1e7a6ddac15972d73356",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "skill",
+      "selected_studies": 154,
+      "sha256": "3980c927413f9bc8b473310bd53ba456d2f2a043eeaa15419c497090d9dfec4b",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "sleep",
+      "selected_studies": 154,
+      "sha256": "bbffbd4dabfb283e32977761b170276d4c514d9bb746684d70ac14a03d6c7be2",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "social_cognition",
+      "selected_studies": 220,
+      "sha256": "7dec383310c3550d55bbe110c38c82d6f04d74ad58a34a927fa255b4f2efbbbf",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "spatial_attention",
+      "selected_studies": 149,
+      "sha256": "4acdad4902db1ec8dfb92e0a0af664b9b3e0d6b3be473235feca3aed1640c533",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "speech_perception",
+      "selected_studies": 97,
+      "sha256": "2b839b4336fddfe7d9765524543e395c5ec4bbcff49eb67f9cfe9a33a359b9b4",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "speech_production",
+      "selected_studies": 107,
+      "sha256": "728e3b753e721e20825258200bd4c4b0d041c26d67a3131460870ebdbe3dad6f",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "strategy",
+      "selected_studies": 253,
+      "sha256": "983871ad890d9947edda7063b6e590949289b4dfb2fa36f419ec7aa60bffb754",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "strength",
+      "selected_studies": 440,
+      "sha256": "a815417336479057a1e4609290e93e0e49c8557a307145dfada99656f037700e",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "stress",
+      "selected_studies": 321,
+      "sha256": "fce0bcd1887b83dc27d086410427b7932536f893d7e57fe19fc017cb9cee1aec",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "sustained_attention",
+      "selected_studies": 74,
+      "sha256": "b72f735a8a2d241aeede1d9b0520fa4d733014c7bfd6b5e194af4d2603dfe274",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "task_difficulty",
+      "selected_studies": 153,
+      "sha256": "abaf69a5e2500ec9d74b2956509784e784cab4715c41998145dd4d173395eda3",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "thought",
+      "selected_studies": 573,
+      "sha256": "86c3a01016625b493d3ec04b2e6c595b387d820570daec36ea5ad213f7368ede",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "timing",
+      "selected_studies": 186,
+      "sha256": "f29ed6ea61a39c711fcab830addc356e43bc9a2db1ae70b877a28a8b2ca94f93",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "uncertainty",
+      "selected_studies": 130,
+      "sha256": "3626b0bffb75e0577a2ea0e405c2a1b8b0ff17b0f5d9b1b168dc009fae2c0a32",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "updating",
+      "selected_studies": 115,
+      "sha256": "f7b87a0b1fe8499de0cb7c64956f2c3c0f926b88267e413a5ab8e737d77c9df4",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "utility",
+      "selected_studies": 111,
+      "sha256": "0598dfbc706cc4b91280d9e950ab0b055e0baa98677b41b433a495ede30c752a",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "valence",
+      "selected_studies": 361,
+      "sha256": "bd620542c4ca71c6f86a6ab0310c47f4e327becc67ce763a3cfe36f8b31450e2",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "verbal_fluency",
+      "selected_studies": 84,
+      "sha256": "9301fc0b425aeb5ecff8ec776e0c5ce61039ffaa90d9da882c1b75c1ac1e0b13",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "visual_attention",
+      "selected_studies": 124,
+      "sha256": "ed7bed8db4c94402c4412311087ce7ad502db0aa4a59a79603e34157472212ec",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "visual_perception",
+      "selected_studies": 83,
+      "sha256": "e3bcdd09be88e6470421eb2b5a8d9f213c9be1f259415e0a4050810eb1f3accb",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "word_recognition",
+      "selected_studies": 87,
+      "sha256": "aee1cda5ce46daa738565855d3fe674635ef46271d7e88655290153286a1e577",
+      "minimum_parcel_voxels": 382
+    },
+    {
+      "term": "working_memory",
+      "selected_studies": 1091,
+      "sha256": "274cf61b14ac735fb8e74b2c52f831c135f5a9f4bb8752676099639dbf34ac9e",
+      "minimum_parcel_voxels": 382
+    }
+  ],
+  "background": "zero z values retained"
+}

@@ -1,0 +1,13 @@
+step	code	input	packages	processing	parameters	output	modifiable	source	review_status	reviewer	notes
+01配置合同	functions/configuration.py	config.yaml	PyYAML	白名单变换与冻结方法校验	135/130/129/1375;G/W;四个FDR家族（NIHSS、mRS_single、mRS_longitudinal、moca）	内存配置和明确错误	数据路径/字段/编码/统计设置	项目已确认方案	待代码审核		
+02参考核验	functions/reference.py	reference/manifest.json	NumPy/SciPy/h5py	SHA256/谱残差/正交性	end端点;固定健康尺度	preflight.json	冻结参考不可普通修改	LQT;Preti2019	待代码审核		
+03病灶识别	functions/cohort.py	病灶目录/可选participants.tsv	NiBabel/pathlib	按一个星号提取完整ID;重复检查	subjects.pattern;imaging.space_confirmed	manifest.json/排除记录	路径/ID前后缀/成员映射	项目输入合同	待代码审核		
+04病灶映射	functions/space.py	1mm二值病灶/参考模板	NiBabel/NumPy	物理坐标最近邻;原始体积;脑区覆盖	1mm;体积变化<=1%	内存掩膜/rho/体积/record.json	空间确认/容差需有依据	LQT;NiBabel	待代码审核		无病灶质控图
+05断连与双通道	functions/index.py;functions/spectral.py	固定索引/rho/健康谐波	Numba/h5py/NumPy	流线ID并集;G平方载荷;W边能量;Jmax	固定健康度矩阵;129非零模态	result.npz和汇总表	仅Jmax保存开关	LQT;Preti2019;本项目扰动扩展	待代码审核		
+06临床整合	functions/clinical.py	SAS/字段定义/影像汇总	pyreadstat/pandas	显式追加或横向合并;缺失/范围/死亡检查	clinical区域/规则确认	analysis.tsv.gz/核查表/成员表	SAS文件/ID/字段/编码	用户变量表;pyreadstat	待代码审核		候选映射尚未真实核实
+07插补	statistics/imputation.R	已观察结局名单/完整影像	mice	仅协变量MI;保存缺失填充值与链诊断	m30;20至100次;PSRF1.1	每结局imputations.rds及诊断	次数/诊断阈值;不改禁止填补合同	MICE	待代码审核		
+08逐模态关联	statistics/inference.R	固定插补/129对G/W	ordinal/sandwich/mitml	CLM或HC3;联合D1;Rubin;固定家族BH	四个FDR家族（NIHSS、mRS_single、mRS_longitudinal、moca）q0.05;可选CLMM	associations.csv/诊断/敏感性	结局/协变量/纵向开关	ordinal;D1;Rubin	待代码审核		
+09组合学习	statistics/patterns.R	全部258特征/20目标	ordinalNet/mice	训练折内处理;协变量不惩罚;影像得分	5折;alpha0.5;60lambda;1SE	model.json/权重/折记录	折数/惩罚网格/迭代	ordinalNet	待代码审核		不按单模态显著性预筛
+10外部验证	statistics/patterns.R::validation_stage	独立验证表/冻结模型	ordinal/mice/mitml	不调权;调整后关联;资格判定	指定结局+预设mRS组合扩展	validation.csv/planned_tests.csv	外部字段映射/预设检验	项目外部验证合同	待代码审核		
+11空间贡献与注释	functions/spatial_export.py;functions/annotation.py	通过验证组合/原始损失贡献/注释资源	NumPy/SciPy/Matplotlib	原尺度系数加权节点贡献;Moran零模型	100皮层;10000次;两套资源分BH	G/W脑区表/PNG/annotations.csv	术语版本/零模型次数/绘图	Hansen;Neurosynth;BrainSpace方法	待代码审核		VAChT缺失保留检验位置
+12调度与报告	functions/pipeline.py;functions/results_report.py	配置/阶段完成记录	Python/psutil	依赖指纹;原子提交;恢复;只读本次结果	4进程/1线程;紧凑存储	stages.json/report.html	运行名/并发/阶段选择	项目工程规则	待代码审核		不生成患者人工审核表

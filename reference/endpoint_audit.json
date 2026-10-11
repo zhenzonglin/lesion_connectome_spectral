@@ -1,0 +1,12 @@
+{
+  "total_tracks": 138445,
+  "tracks_under_two_points": 37,
+  "tracks_with_unmatched_endpoint": 38686,
+  "within_roi_tracks": 8170,
+  "interregional_tracks": 91552,
+  "unmatched_endpoints": 46795,
+  "valid_endpoints": 276816,
+  "native_counts_max_difference": 0,
+  "fib_qa_affines_agree": true,
+  "coordinate_convention": "native_DSI_LPS_voxel_times_FIB_affine"
+}

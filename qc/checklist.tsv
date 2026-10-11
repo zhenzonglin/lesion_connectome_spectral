@@ -1,0 +1,7 @@
+step	function	inputs	parameters	outputs	source	automatic_check	human_check	manual_status	reviewer	notes
+健康参考	functions/reference.py:verify_reference; numerical_checks	reference/manifest.json; sc.npz; modes.npz	135脑区;130有效节点;129非零模态;1375边;end端点规则;不二值化	冻结参考与排除清单	LQT commit 050bc257d686d7e7cba28262429e583bf5be7454; Preti 2019	SHA256;矩阵对称;无自环;谱残差及正交误差<1e-6	模板/图谱配准;深部标签修正;5个排除节点;整体脑干性质	pending		
+病灶映射	functions/space.py:map_patient	lesion内二值掩膜;template.nii.gz	MNI152NLin6Asym;order=0;最大体积变化0.01;保留全部组成	内存中统一网格掩膜;空间记录	NiBabel resample_from_to; LQT空间前提	有限三维二值;空掩膜排除记录;仿射有效;体积变化<=1%	按用户要求不进行患者病灶质控	pending		
+脑区覆盖	functions/space.py:roi_damage	病灶;atlas.nii.gz;nodes.tsv	交集/固定脑区体积;脑干混合组织单列;rho不乘SC	135脑区覆盖率;图谱外体素计数	LQT util_get_parcel_damage	覆盖率0至1;三例与旧结果误差<1e-12	图谱外损伤和灰白质解释	pending		
+流线中断	functions/index.py:append_segment; collect_memberships; interrupted_counts	tracks.h5;统一网格掩膜	完整线段DDA;容差1e-12;唯一流线并集;端点规则end	1375条健康边中断计数;命中类别统计	LQT util_get_parcel_discon;本项目精确线段索引	三例逐条ID相同;小灶与重复路径;小脑497/379和脑桥556/550对照	未匹配端点造成的可估计范围	pending		
+谐波损失	functions/spectral.py:fixed_support_loss	中断计数;固定健康体积/度矩阵/谐波	全部129非零模态;健康尺度;每边能量均分给两端	support_loss;按需脑区贡献	Preti健康分解;本项目损失扩展	0<=cp<=c0;0<=s<=1;空病灶零损失;贡献守恒	确认结果解释为模型结构支撑损失	pending		
+提交与恢复	functions/patient.py:process_subject; functions/runner.py:coordinate	输入及方法指纹;运行状态	4工作进程;每进程1线程;完整校验后原子提交	result.npz;record.json;excluded.tsv;汇总表	本项目工程规则	停止/续跑;重复锁;半成品重算;已完成结果不覆盖	病例、输入与计算记录对应;不生成患者人工审核表	pending		

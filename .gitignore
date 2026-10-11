@@ -1,0 +1,46 @@
+# 数据、运行结果和环境：患者数据不得进入 GitHub
+lesion/**
+!lesion/
+!lesion/discovery/
+!lesion/discovery/.gitkeep
+!lesion/validation/
+!lesion/validation/.gitkeep
+clinical/**/*.sas7bdat
+clinical/**/output/
+clinical/**/audit/
+results/
+archive/
+env/
+.cache/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# 生成性图片和临时运行状态
+reference/annotation/healthy/
+reference/annotation/*/healthy/
+qc/generated/
+*.log
+*.lock
+*.tmp
+
+# 大型可选快照不进普通 Git；只保留 README、manifest 和校验文件
+large_files/**/*.tar.gz
+large_files/**/*.zip
+portable/
+offline/runtime.tar.gz
+# 环境重建所需的文本清单可以上传
+!offline/conda_explicit.txt
+!offline/pip_freeze.txt
+!offline/versions.json
+!offline/build.json
+!large_files/README.md
+!large_files/manifest.tsv
+!large_files/portable/
+!large_files/portable/README.md
+!large_files/offline/
+!large_files/offline/README.md
+!large_files/**/*.sha256
+
+# 保留目录占位文件
+!.gitkeep

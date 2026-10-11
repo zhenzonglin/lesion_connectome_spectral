@@ -1,0 +1,30 @@
+# 开发机重新构建用；移植机执行 setup.sh，不联网求解。
+channels:
+  - conda-forge
+  - nodefaults
+dependencies:
+  - python=3.11
+  - numpy
+  - scipy
+  - nibabel
+  - h5py
+  - numba
+  - pandas
+  - matplotlib-base
+  - pyyaml
+  - psutil
+  - threadpoolctl
+  - pytest
+  - conda-pack
+  - pip
+  - pyreadstat
+  - scikit-learn
+  - statsmodels
+  - r-base=4.4
+  - r-ordinal
+  - r-mice
+  - r-mitml
+  - r-ordinalnet
+  - r-sandwich
+  - r-lme4
+  - r-jsonlite

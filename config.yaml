@@ -1,0 +1,743 @@
+# 正式双队列主配置。所有路径、字段和统计参数都在本文件集中管理。
+# 不能在配置中执行 Python/R 表达式；固定方法合同由 functions/configuration.py 校验。
+# 一、paths：发现/验证病灶和临床输入目录；reference 是冻结健康底座；results 保存正式输出。
+# 二、subjects：每个队列的文件模式和 ID 提取规则。pattern 仅一个 *；复杂文件名用 id_rule.id_regex。
+# 三、imaging：1 mm MNI 空间与 LQT135 健康底座合同，nodes/active_nodes/modes/edges 为固定属性。
+# 四、clinical：每个队列自动读取其子目录中的全部 SAS；field_map 是验证队列的显式字段覆盖。
+# 五、statistics：G/W 损伤通道、MI、模型和四个 FDR 家族（MoCA 三个月份共用 moca 家族）。
+# 六、patterns：20 个发现集组合模式；validation 只应用冻结后的权重和标准化参数。
+# 七、annotation/runtime：注释零模型、300 dpi 图片和可恢复运行设置。
+
+schema_version: 2
+paths:
+  lesion:
+    discovery: lesion/discovery
+    validation: lesion/validation
+  clinical:
+    discovery: clinical/discovery
+    validation: clinical/validation
+  reference: reference
+  results: results
+  annotation: reference/annotation
+subjects:
+  cohorts:
+    discovery:
+      pattern: sub-*_lesion.nii.gz
+      id_rule:
+        prefix: sub-
+        suffix: _lesion.nii.gz
+        id_regex: null
+      participants: null
+    validation:
+      pattern: sub-*_lesion.nii.gz
+      id_rule:
+        prefix: sub-
+        suffix: _lesion.nii.gz
+        id_regex: null
+      participants: null
+  pattern: sub-*_lesion.nii.gz
+  default: all
+  participants: null
+imaging:
+  space: MNI152NLin6Asym
+  space_confirmed: true
+  voxel_size_mm: 1.0
+  voxel_tolerance_mm: 0.0001
+  maximum_volume_change: 0.01
+  save_jmax: true
+  healthy_contract:
+    nodes: 135
+    active_nodes: 130
+    nonzero_modes: 129
+    edges: 1375
+clinical:
+  enabled: true
+  cohorts:
+    discovery:
+      confirmed: false
+      auto_discover: true
+      id:
+        field: code_n
+        fields: null
+        separator: ''
+        kind: string
+        width: null
+      member_file: null
+      field_map: {}
+      variable_overrides: {}
+      rules_confirmed:
+        id_mapping: false
+        mrs_death: false
+    validation:
+      confirmed: false
+      auto_discover: true
+      id:
+        field: null
+        fields:
+        - c_code
+        - p_code
+        separator: ''
+        kind: string
+        width: null
+      member_file: null
+      field_map:
+        age: AGE
+        sex: GENDER
+        prestroke_mrs: H_MRS
+        acute_nihss: A_NIHSS
+        mrs_3m: m3_mrs36
+        mrs_6m: m6_mrs36
+        mrs_12m: m12_mrs36
+      variable_overrides: {}
+      rules_confirmed:
+        id_mapping: false
+        mrs_death: false
+  merge:
+    unmatched_policy: report
+    conflict_policy: error
+  variables:
+    age:
+      title: 年龄
+      type: continuous
+      missing: []
+      field: AGE
+      range:
+      - 0
+      - 120
+    sex:
+      title: 性别
+      type: binary
+      missing: []
+      field: GENDER
+      levels:
+      - 1
+      - 2
+    prestroke_mrs:
+      title: 卒中前mRS
+      type: ordinal
+      missing: []
+      field: H_MRS
+      levels:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+    acute_nihss:
+      title: 入院NIHSS总分
+      type: continuous
+      missing: []
+      field: A_NIHSS
+      range:
+      - 0
+      - 42
+    education:
+      title: 教育程度（分类；98为未知）
+      type: nominal
+      missing:
+      - 98
+      field: EDUC
+      levels:
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+    log_lesion_volume:
+      title: 原始病灶体积mm3的log1p
+      type: continuous
+      missing: []
+      range:
+      - 0
+      - 30
+      source: imaging
+    mrs_3m:
+      title: mRS_3m
+      type: ordinal
+      missing: []
+      field: m3_mRS
+      levels:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+    mrs_6m:
+      title: mRS_6m
+      type: ordinal
+      missing: []
+      field: m6_mRS
+      levels:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+    mrs_12m:
+      title: mRS_12m
+      type: ordinal
+      missing: []
+      field: m12_mRS
+      levels:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+    mrs_24m:
+      title: mRS_24m
+      type: ordinal
+      missing: []
+      field: m24_mrs
+      levels:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+    mrs_36m:
+      title: mRS_36m
+      type: ordinal
+      missing: []
+      field: m36_mrs
+      levels:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+    mrs_48m:
+      title: mRS_48m
+      type: ordinal
+      missing: []
+      field: m48_mrs
+      levels:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+    mrs_60m:
+      title: mRS_60m
+      type: ordinal
+      missing: []
+      field: m60_mrs
+      levels:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+    moca_3m:
+      title: MoCA_3m
+      type: continuous
+      missing: []
+      field: VA1_116
+      range:
+      - 0
+      - 30
+    moca_6m:
+      title: MoCA_6m
+      type: continuous
+      missing: []
+      field: VF6V01_145
+      range:
+      - 0
+      - 30
+    moca_12m:
+      title: MoCA_12m
+      type: continuous
+      missing: []
+      field: VF12A1_116
+      range:
+      - 0
+      - 30
+    nihss_1a:
+      title: NIHSS意识水平
+      type: ordinal
+      missing: []
+      field: A_NIH1A
+      levels:
+      - 0
+      - 1
+      - 2
+      - 3
+    nihss_1b:
+      title: NIHSS意识提问
+      type: ordinal
+      missing: []
+      field: A_NIH1B
+      levels:
+      - 0
+      - 1
+      - 2
+    nihss_1c:
+      title: NIHSS意识指令
+      type: ordinal
+      missing: []
+      field: A_NIH1C
+      levels:
+      - 0
+      - 1
+      - 2
+    nihss_2:
+      title: NIHSS凝视
+      type: ordinal
+      missing: []
+      field: A_NIH2
+      levels:
+      - 0
+      - 1
+      - 2
+    nihss_3:
+      title: NIHSS视野
+      type: ordinal
+      missing: []
+      field: A_NIH3
+      levels:
+      - 0
+      - 1
+      - 2
+      - 3
+    nihss_4:
+      title: NIHSS面瘫
+      type: ordinal
+      missing: []
+      field: A_NIH4
+      levels:
+      - 0
+      - 1
+      - 2
+      - 3
+    nihss_5a:
+      title: NIHSS左上肢运动
+      type: ordinal
+      missing:
+      - 9
+      field: A_NIH5A
+      levels:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+    nihss_5b:
+      title: NIHSS右上肢运动
+      type: ordinal
+      missing:
+      - 9
+      field: A_NIH5B
+      levels:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+    nihss_6a:
+      title: NIHSS左下肢运动
+      type: ordinal
+      missing:
+      - 9
+      field: A_NIH6A
+      levels:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+    nihss_6b:
+      title: NIHSS右下肢运动
+      type: ordinal
+      missing:
+      - 9
+      field: A_NIH6B
+      levels:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+    nihss_7:
+      title: NIHSS共济失调
+      type: ordinal
+      missing: []
+      field: A_NIH7
+      levels:
+      - 0
+      - 1
+      - 2
+    nihss_8:
+      title: NIHSS感觉
+      type: ordinal
+      missing: []
+      field: A_NIH8
+      levels:
+      - 0
+      - 1
+      - 2
+    nihss_9:
+      title: NIHSS语言
+      type: ordinal
+      missing: []
+      field: A_NIH9
+      levels:
+      - 0
+      - 1
+      - 2
+      - 3
+    nihss_10:
+      title: NIHSS构音
+      type: ordinal
+      missing:
+      - 9
+      field: A_NIH10
+      levels:
+      - 0
+      - 1
+      - 2
+    nihss_11:
+      title: NIHSS忽略
+      type: ordinal
+      missing: []
+      field: A_NIH11
+      levels:
+      - 0
+      - 1
+      - 2
+    nihss_consciousness:
+      title: NIHSS意识合并项
+      type: ordinal
+      missing: []
+      levels:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      source: derived
+    nihss_motor_left:
+      title: NIHSS左侧肢体合并项
+      type: ordinal
+      missing: []
+      levels:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      source: derived
+    nihss_motor_right:
+      title: NIHSS右侧肢体合并项
+      type: ordinal
+      missing: []
+      levels:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      source: derived
+    nihss_motor_total:
+      title: NIHSS四肢运动合并项
+      type: ordinal
+      missing: []
+      levels:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      - 10
+      - 11
+      - 12
+      - 13
+      - 14
+      - 15
+      - 16
+      source: derived
+  derived:
+    log_lesion_volume:
+      operation: log1p
+      inputs:
+      - lesion_volume_mm3
+    nihss_consciousness:
+      operation: sum_complete
+      inputs:
+      - nihss_1a
+      - nihss_1b
+      - nihss_1c
+    nihss_motor_left:
+      operation: sum_complete
+      inputs:
+      - nihss_5a
+      - nihss_6a
+    nihss_motor_right:
+      operation: sum_complete
+      inputs:
+      - nihss_5b
+      - nihss_6b
+    nihss_motor_total:
+      operation: sum_complete
+      inputs:
+      - nihss_5a
+      - nihss_5b
+      - nihss_6a
+      - nihss_6b
+  covariate_sets:
+    nihss:
+    - age
+    - sex
+    - log_lesion_volume
+    mrs:
+    - age
+    - sex
+    - log_lesion_volume
+    - prestroke_mrs
+    - acute_nihss
+    moca:
+    - age
+    - sex
+    - log_lesion_volume
+    - education
+  death:
+    policy: mrs_equals_6
+    mrs_death_value: 6
+    times:
+      3:
+        outcome: mrs_3m
+      6:
+        outcome: mrs_6m
+      12:
+        outcome: mrs_12m
+      24:
+        outcome: mrs_24m
+      36:
+        outcome: mrs_36m
+      48:
+        outcome: mrs_48m
+      60:
+        outcome: mrs_60m
+  moca:
+    version: preadjusted
+    education_correction: already_applied
+statistics:
+  channels:
+  - g
+  - w
+  jmax_sensitivity: false
+  fdr:
+    method: BH
+    q: 0.05
+    failed_tests_in_denominator: true
+  mi:
+    m: 30
+    maxit: 20
+    increment: 20
+    max_iterations: 100
+    seed: 271828
+    psrf_threshold: 1.1
+    methods:
+      continuous: pmm
+      binary: logreg
+      nominal: polyreg
+      ordinal: polr
+    outcome_policy: observed_only
+    inference_outcome_predictor: true
+    learning_outcome_predictor: false
+    save_completed_images: false
+  models:
+    ordinal:
+      package: ordinal
+      link: logit
+      po_alpha: 0.05
+      threshold_sensitivity: true
+      sparse_level_minimum: 10
+      information_condition_limit: 1000000000000.0
+      gradient_tolerance: 0.0001
+    linear:
+      covariance: HC3
+      ceiling_fraction_warning: 0.15
+    longitudinal:
+      enabled: false
+      time: categorical
+      random_intercept: subject_id
+      n_agq: 5
+      time_interaction: false
+      threshold_sensitivity: true
+    joint_test: D1
+    coefficient_pooling: Rubin
+  families:
+    nihss:
+      enabled: true
+      model: ordinal
+      covariate_set: nihss
+      outcomes:
+      - nihss_1a
+      - nihss_1b
+      - nihss_1c
+      - nihss_2
+      - nihss_3
+      - nihss_4
+      - nihss_5a
+      - nihss_5b
+      - nihss_6a
+      - nihss_6b
+      - nihss_7
+      - nihss_8
+      - nihss_9
+      - nihss_10
+      - nihss_11
+      - nihss_consciousness
+      - nihss_motor_left
+      - nihss_motor_right
+      - nihss_motor_total
+    mrs_single:
+      enabled: true
+      model: ordinal
+      covariate_set: mrs
+      outcomes:
+      - mrs_3m
+      - mrs_6m
+      - mrs_12m
+      - mrs_24m
+      - mrs_36m
+      - mrs_48m
+      - mrs_60m
+    mrs_longitudinal:
+      enabled: false
+      model: longitudinal
+      covariate_set: mrs
+      outcomes:
+      - mrs_longitudinal
+      visits:
+        mrs_3m: 3
+        mrs_6m: 6
+        mrs_12m: 12
+        mrs_24m: 24
+        mrs_36m: 36
+        mrs_48m: 48
+        mrs_60m: 60
+    moca:
+      enabled: true
+      model: linear
+      covariate_set: moca
+      outcomes:
+      - moca_3m
+      - moca_6m
+      - moca_12m
+patterns:
+  enabled: true
+  targets:
+  - mrs_3m
+  - nihss_1a
+  - nihss_1b
+  - nihss_1c
+  - nihss_2
+  - nihss_3
+  - nihss_4
+  - nihss_5a
+  - nihss_5b
+  - nihss_6a
+  - nihss_6b
+  - nihss_7
+  - nihss_8
+  - nihss_9
+  - nihss_10
+  - nihss_11
+  - nihss_consciousness
+  - nihss_motor_left
+  - nihss_motor_right
+  - nihss_motor_total
+  package: ordinalNet
+  folds: 5
+  alpha: 0.5
+  lambda_min: 0.0001
+  lambda_max: 1.0
+  n_lambda: 60
+  selection: one_standard_error
+  seed: 314159
+  standardize_within_training: true
+  imputation_uses_outcome: false
+  covariates_penalized: false
+  score_contains_covariates: false
+  maxiter: 1000
+  tolerance: 1.0e-06
+  primary_target: mrs_3m
+validation:
+  enabled: true
+  cohort: validation
+  forbid_subject_overlap: true
+  mrs_pattern_profile: true
+  require_replication_for_annotation: true
+  inference_mi_uses_observed_outcome: true
+annotation:
+  enabled: true
+  cortex_only: true
+  resources: reference/annotation
+  null_method: hemisphere_singleton_moran
+  permutations: 10000
+  seed: 161803
+  fdr:
+    method: BH
+    q: 0.05
+    families:
+    - neurosynth
+    - hansen
+  export_healthy_modes: true
+  export_patient_maps: false
+  extend_subcortex: false
+  figure:
+    dpi: 300
+    format: png
+    colormap_signed: coolwarm
+    colormap_loss: magma
+runtime:
+  workers: 4
+  threads: 1
+  stages:
+  - preflight
+  - lesion
+  - clinical
+  - imputation
+  - association
+  - patterns
+  - validation
+  - annotation
+  - report
+  checkpoint: true
+  atomic_commit: true
+  compact_outputs: true
+  patient_qc_images: false
+  manual_qc_tables: false
+  monitor_interval_seconds: 10

@@ -1,0 +1,40 @@
+{
+  "total_tracks": 138445,
+  "memberships": 20865210,
+  "index_bytes": 27134816,
+  "class_counts": [
+    37,
+    38686,
+    8170,
+    91552
+  ],
+  "healthy_counts_exact": true,
+  "native_to_template_voxel": [
+    [
+      1.0,
+      0.0,
+      0.0,
+      12.0
+    ],
+    [
+      0.0,
+      -1.0,
+      0.0,
+      202.0
+    ],
+    [
+      0.0,
+      0.0,
+      1.0,
+      22.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "elapsed_seconds": 128.2517407180021,
+  "geometry_rule": "same as archived geometry.segment_hit; no point sampling"
+}

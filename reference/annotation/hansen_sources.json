@@ -1,0 +1,1134 @@
+{
+  "maps_planned": [
+    "5HT1a",
+    "5HT1b",
+    "5HT2a",
+    "5HT4",
+    "5HT6",
+    "5HTT",
+    "A4B2",
+    "CB1",
+    "D1",
+    "D2",
+    "DAT",
+    "GABAa",
+    "H3",
+    "M1",
+    "mGluR5",
+    "MOR",
+    "NET",
+    "NMDA",
+    "VAChT"
+  ],
+  "maps_available": [
+    "5HT1a",
+    "5HT1b",
+    "5HT2a",
+    "5HT4",
+    "5HT6",
+    "5HTT",
+    "A4B2",
+    "CB1",
+    "D1",
+    "D2",
+    "DAT",
+    "GABAa",
+    "H3",
+    "M1",
+    "mGluR5",
+    "MOR",
+    "NET",
+    "NMDA"
+  ],
+  "sources": [
+    {
+      "source": "5HT1a_way_hc36_savli",
+      "status": "available",
+      "sha256": "dda308c8b538556f279cafc2f8fa21f6825c28af39dbb003ca3017dca99548a6",
+      "url": "https://raw.githubusercontent.com/netneurolab/hansen_receptors/f8b41da92a733f99368c1f39d4959731aa1316c1/data/PET_nifti_images/5HT1a_way_hc36_savli.nii",
+      "grid": [
+        61,
+        73,
+        61
+      ],
+      "minimum_parcel_voxels": 101,
+      "affine": [
+        [
+          -3.0,
+          0.0,
+          0.0,
+          90.0
+        ],
+        [
+          0.0,
+          3.0,
+          0.0,
+          -126.0
+        ],
+        [
+          0.0,
+          0.0,
+          3.0,
+          -72.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "voxel_size_mm": [
+        3.0,
+        3.0,
+        3.0
+      ]
+    },
+    {
+      "source": "5HT1b_p943_hc22_savli",
+      "status": "available",
+      "sha256": "34d234a2b547c9fb44cf059d8e41886000e8cad433626895ea1096a4d983b85a",
+      "url": "https://raw.githubusercontent.com/netneurolab/hansen_receptors/f8b41da92a733f99368c1f39d4959731aa1316c1/data/PET_nifti_images/5HT1b_p943_hc22_savli.nii",
+      "grid": [
+        61,
+        73,
+        61
+      ],
+      "minimum_parcel_voxels": 97,
+      "affine": [
+        [
+          -3.0,
+          0.0,
+          0.0,
+          90.0
+        ],
+        [
+          0.0,
+          3.0,
+          0.0,
+          -126.0
+        ],
+        [
+          0.0,
+          0.0,
+          3.0,
+          -72.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "voxel_size_mm": [
+        3.0,
+        3.0,
+        3.0
+      ]
+    },
+    {
+      "source": "5HT1b_p943_hc65_gallezot",
+      "status": "available",
+      "sha256": "a2578c95909ee01f50c54d46600ce5b4e5ce562072a866f3d118cea962773430",
+      "url": "https://raw.githubusercontent.com/netneurolab/hansen_receptors/f8b41da92a733f99368c1f39d4959731aa1316c1/data/PET_nifti_images/5HT1b_p943_hc65_gallezot.nii.gz",
+      "grid": [
+        193,
+        229,
+        193
+      ],
+      "minimum_parcel_voxels": 3035,
+      "affine": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -96.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -132.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -78.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "voxel_size_mm": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "source": "5HT2a_cimbi_hc29_beliveau",
+      "status": "available",
+      "sha256": "69593fb48995ffa015671ab57e06b6fbcfe2b4d39799a7bbd76b70ac70cdd68a",
+      "url": "https://raw.githubusercontent.com/netneurolab/hansen_receptors/f8b41da92a733f99368c1f39d4959731aa1316c1/data/PET_nifti_images/5HT2a_cimbi_hc29_beliveau.nii",
+      "grid": [
+        182,
+        218,
+        182,
+        1
+      ],
+      "minimum_parcel_voxels": 1285,
+      "affine": [
+        [
+          -1.0,
+          0.0,
+          0.0,
+          90.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -126.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -72.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "voxel_size_mm": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "source": "5HT4_sb20_hc59_beliveau",
+      "status": "available",
+      "sha256": "00766c2b61d587a944926afcba185578beec36bdc228fa440b345f793c3c419a",
+      "url": "https://raw.githubusercontent.com/netneurolab/hansen_receptors/f8b41da92a733f99368c1f39d4959731aa1316c1/data/PET_nifti_images/5HT4_sb20_hc59_beliveau.nii",
+      "grid": [
+        182,
+        218,
+        182,
+        1
+      ],
+      "minimum_parcel_voxels": 1285,
+      "affine": [
+        [
+          -1.0,
+          0.0,
+          0.0,
+          90.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -126.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -72.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "voxel_size_mm": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "source": "5HT6_gsk_hc30_radhakrishnan",
+      "status": "available",
+      "sha256": "ce36fa31b4ab735f5d2eb99479a85fb339f87fdc13131bc09098c66d38145032",
+      "url": "https://raw.githubusercontent.com/netneurolab/hansen_receptors/f8b41da92a733f99368c1f39d4959731aa1316c1/data/PET_nifti_images/5HT6_gsk_hc30_radhakrishnan.nii.gz",
+      "grid": [
+        193,
+        229,
+        193
+      ],
+      "minimum_parcel_voxels": 3035,
+      "affine": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -96.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -132.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -78.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "voxel_size_mm": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "source": "5HTT_dasb_hc100_beliveau",
+      "status": "available",
+      "sha256": "3555671acd43f786a0c91dac96b8befe5b7f539799beb60970583bd98480081b",
+      "url": "https://raw.githubusercontent.com/netneurolab/hansen_receptors/f8b41da92a733f99368c1f39d4959731aa1316c1/data/PET_nifti_images/5HTT_dasb_hc100_beliveau.nii",
+      "grid": [
+        182,
+        218,
+        182,
+        1
+      ],
+      "minimum_parcel_voxels": 1285,
+      "affine": [
+        [
+          -1.0,
+          0.0,
+          0.0,
+          90.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -126.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -72.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "voxel_size_mm": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "source": "A4B2_flubatine_hc30_hillmer",
+      "status": "available",
+      "sha256": "68bf7a2539069a96a1afa26139d1af2b82d5838744733a3fcc8e7d5c77c63af1",
+      "url": "https://raw.githubusercontent.com/netneurolab/hansen_receptors/f8b41da92a733f99368c1f39d4959731aa1316c1/data/PET_nifti_images/A4B2_flubatine_hc30_hillmer.nii.gz",
+      "grid": [
+        193,
+        229,
+        193
+      ],
+      "minimum_parcel_voxels": 3035,
+      "affine": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -96.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -132.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -78.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "voxel_size_mm": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "source": "CB1_omar_hc77_normandin",
+      "status": "available",
+      "sha256": "6074b066eb3c223826064fe7cdbf1a4dcdec6810a3e569713267dca7c4865903",
+      "url": "https://raw.githubusercontent.com/netneurolab/hansen_receptors/f8b41da92a733f99368c1f39d4959731aa1316c1/data/PET_nifti_images/CB1_omar_hc77_normandin.nii.gz",
+      "grid": [
+        193,
+        229,
+        193
+      ],
+      "minimum_parcel_voxels": 3035,
+      "affine": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -96.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -132.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -78.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "voxel_size_mm": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "source": "D1_SCH23390_hc13_kaller",
+      "status": "available",
+      "sha256": "49e00a39987486a6e2b3f82b0ee94509ebcde53ab2ccba17e8752d6f52494bf0",
+      "url": "https://raw.githubusercontent.com/netneurolab/hansen_receptors/f8b41da92a733f99368c1f39d4959731aa1316c1/data/PET_nifti_images/D1_SCH23390_hc13_kaller.nii",
+      "grid": [
+        61,
+        73,
+        61
+      ],
+      "minimum_parcel_voxels": 104,
+      "affine": [
+        [
+          -3.0,
+          0.0,
+          0.0,
+          90.0
+        ],
+        [
+          0.0,
+          3.0,
+          0.0,
+          -126.0
+        ],
+        [
+          0.0,
+          0.0,
+          3.0,
+          -72.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "voxel_size_mm": [
+        3.0,
+        3.0,
+        3.0
+      ]
+    },
+    {
+      "source": "D2_flb457_hc37_smith",
+      "status": "available",
+      "sha256": "c115692acfdf5fe2ae28c0e82e85cd346b76d9ac3e75ef9666ac818e5eb3201a",
+      "url": "https://raw.githubusercontent.com/netneurolab/hansen_receptors/f8b41da92a733f99368c1f39d4959731aa1316c1/data/PET_nifti_images/D2_flb457_hc37_smith.nii.gz",
+      "grid": [
+        193,
+        229,
+        193
+      ],
+      "minimum_parcel_voxels": 3035,
+      "affine": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -96.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -132.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -78.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "voxel_size_mm": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "source": "D2_flb457_hc55_sandiego",
+      "status": "available",
+      "sha256": "57e11c656cfba19271f86e8a60de711807ab5b04448477fb67c7aa5c0418760f",
+      "url": "https://raw.githubusercontent.com/netneurolab/hansen_receptors/f8b41da92a733f99368c1f39d4959731aa1316c1/data/PET_nifti_images/D2_flb457_hc55_sandiego.nii.gz",
+      "grid": [
+        193,
+        229,
+        193
+      ],
+      "minimum_parcel_voxels": 3035,
+      "affine": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -96.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -132.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -78.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "voxel_size_mm": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "source": "DAT_fpcit_hc174_dukart_spect",
+      "status": "available",
+      "sha256": "4e257461947bb51201d77a995c354a44a4b56e8dfd75b77814f5ff53a7d033ab",
+      "url": "https://raw.githubusercontent.com/netneurolab/hansen_receptors/f8b41da92a733f99368c1f39d4959731aa1316c1/data/PET_nifti_images/DAT_fpcit_hc174_dukart_spect.nii",
+      "grid": [
+        61,
+        73,
+        61
+      ],
+      "minimum_parcel_voxels": 101,
+      "affine": [
+        [
+          -3.0,
+          0.0,
+          0.0,
+          90.0
+        ],
+        [
+          0.0,
+          3.0,
+          0.0,
+          -126.0
+        ],
+        [
+          0.0,
+          0.0,
+          3.0,
+          -72.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "voxel_size_mm": [
+        3.0,
+        3.0,
+        3.0
+      ]
+    },
+    {
+      "source": "GABAa-bz_flumazenil_hc16_norgaard",
+      "status": "available",
+      "sha256": "80bf54f894f824dde18b5b5f0606c4f7c40df6e964f75c245d3cd11efd11912c",
+      "url": "https://raw.githubusercontent.com/netneurolab/hansen_receptors/f8b41da92a733f99368c1f39d4959731aa1316c1/data/PET_nifti_images/GABAa-bz_flumazenil_hc16_norgaard.nii",
+      "grid": [
+        182,
+        218,
+        182,
+        1
+      ],
+      "minimum_parcel_voxels": 2018,
+      "affine": [
+        [
+          -1.0,
+          0.0,
+          0.0,
+          90.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -126.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -72.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "voxel_size_mm": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "source": "H3_cban_hc8_gallezot",
+      "status": "available",
+      "sha256": "b85f57bd1f6b85ee6c59917d9d28e46e4536c19ea7047617ad7eea85afda85f0",
+      "url": "https://raw.githubusercontent.com/netneurolab/hansen_receptors/f8b41da92a733f99368c1f39d4959731aa1316c1/data/PET_nifti_images/H3_cban_hc8_gallezot.nii.gz",
+      "grid": [
+        193,
+        229,
+        193
+      ],
+      "minimum_parcel_voxels": 3035,
+      "affine": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -96.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -132.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -78.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "voxel_size_mm": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "source": "M1_lsn_hc24_naganawa",
+      "status": "available",
+      "sha256": "969efae18ef1d85be00c2d031f504cb99c76a13f333527196dc9cbc4dbd500f2",
+      "url": "https://raw.githubusercontent.com/netneurolab/hansen_receptors/f8b41da92a733f99368c1f39d4959731aa1316c1/data/PET_nifti_images/M1_lsn_hc24_naganawa.nii.gz",
+      "grid": [
+        193,
+        229,
+        193
+      ],
+      "minimum_parcel_voxels": 3035,
+      "affine": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -96.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -132.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -78.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "voxel_size_mm": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "source": "mGluR5_abp_hc22_rosaneto",
+      "status": "available",
+      "sha256": "dbcb64fbd263e6110dc6627ee6557086af876527c4a7e3d3344bec5da3b7433e",
+      "url": "https://raw.githubusercontent.com/netneurolab/hansen_receptors/f8b41da92a733f99368c1f39d4959731aa1316c1/data/PET_nifti_images/mGluR5_abp_hc22_rosaneto.nii",
+      "grid": [
+        193,
+        229,
+        193
+      ],
+      "minimum_parcel_voxels": 3035,
+      "affine": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -96.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -132.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -78.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "voxel_size_mm": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "source": "mGluR5_abp_hc28_dubois",
+      "status": "available",
+      "sha256": "4f23ea1e7c573de1e8ce8fd39c999da9a52a65114575d20064967bcc54a53003",
+      "url": "https://raw.githubusercontent.com/netneurolab/hansen_receptors/f8b41da92a733f99368c1f39d4959731aa1316c1/data/PET_nifti_images/mGluR5_abp_hc28_dubois.nii",
+      "grid": [
+        193,
+        229,
+        193
+      ],
+      "minimum_parcel_voxels": 3035,
+      "affine": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -96.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -132.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -78.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "voxel_size_mm": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "source": "mGluR5_abp_hc73_smart",
+      "status": "available",
+      "sha256": "0670e8ed1b469d1f7a37f0681faf2350599928feffa08c767d0821efd6b285a7",
+      "url": "https://raw.githubusercontent.com/netneurolab/hansen_receptors/f8b41da92a733f99368c1f39d4959731aa1316c1/data/PET_nifti_images/mGluR5_abp_hc73_smart.nii",
+      "grid": [
+        181,
+        217,
+        181
+      ],
+      "minimum_parcel_voxels": 3035,
+      "affine": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -90.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -126.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -72.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "voxel_size_mm": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "source": "MU_carfentanil_hc204_kantonen",
+      "status": "available",
+      "sha256": "5f0e06a9079f8dd5b27ac0243f050cea60e1c45452657db343a58abea7142cc8",
+      "url": "https://raw.githubusercontent.com/netneurolab/hansen_receptors/f8b41da92a733f99368c1f39d4959731aa1316c1/data/PET_nifti_images/MU_carfentanil_hc204_kantonen.nii",
+      "grid": [
+        61,
+        73,
+        61
+      ],
+      "minimum_parcel_voxels": 104,
+      "affine": [
+        [
+          -3.0,
+          0.0,
+          0.0,
+          90.0
+        ],
+        [
+          0.0,
+          3.0,
+          0.0,
+          -126.0
+        ],
+        [
+          0.0,
+          0.0,
+          3.0,
+          -72.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "voxel_size_mm": [
+        3.0,
+        3.0,
+        3.0
+      ]
+    },
+    {
+      "source": "NAT_MRB_hc77_ding",
+      "status": "available",
+      "sha256": "9ca256ee2c9122940d921fa8200db921b9a41a0293d14645242c90d9b297ccfd",
+      "url": "https://raw.githubusercontent.com/netneurolab/hansen_receptors/f8b41da92a733f99368c1f39d4959731aa1316c1/data/PET_nifti_images/NAT_MRB_hc77_ding.nii.gz",
+      "grid": [
+        193,
+        229,
+        193
+      ],
+      "minimum_parcel_voxels": 3035,
+      "affine": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -96.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -132.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -78.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "voxel_size_mm": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "source": "NMDA_ge179_hc29_galovic",
+      "status": "available",
+      "sha256": "6d831c19a66ac8bb9d1c3c505c7472b04f0e22782f1f88f4600630ea7eedc17d",
+      "url": "https://raw.githubusercontent.com/netneurolab/hansen_receptors/f8b41da92a733f99368c1f39d4959731aa1316c1/data/PET_nifti_images/NMDA_ge179_hc29_galovic.nii.gz",
+      "grid": [
+        193,
+        229,
+        193
+      ],
+      "minimum_parcel_voxels": 3035,
+      "affine": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -96.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -132.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -78.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "voxel_size_mm": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "source": "VAChT_feobv_hc3_spreng",
+      "status": "unavailable",
+      "reason": "OSF原始图当前返回403或登录HTML，不能合法取得；NA保留，不替代",
+      "url": "https://files.osf.io/v1/resources/grh4d/providers/osfstorage/60b92267cb2a5e032768e864",
+      "expected_md5": "15ee182fc5f1a1cfc332667a13970bd0"
+    },
+    {
+      "source": "VAChT_feobv_hc4_tuominen",
+      "status": "available",
+      "sha256": "3a0638fc59f506478f31c3c292bf87a55ba96af2df0d0cafb55489d5e402ff1e",
+      "url": "https://raw.githubusercontent.com/netneurolab/hansen_receptors/f8b41da92a733f99368c1f39d4959731aa1316c1/data/PET_nifti_images/VAChT_feobv_hc4_tuominen.nii",
+      "grid": [
+        91,
+        109,
+        91
+      ],
+      "minimum_parcel_voxels": 382,
+      "affine": [
+        [
+          -2.0,
+          0.0,
+          0.0,
+          90.0
+        ],
+        [
+          0.0,
+          2.0,
+          0.0,
+          -126.0
+        ],
+        [
+          0.0,
+          0.0,
+          2.0,
+          -72.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "voxel_size_mm": [
+        2.0,
+        2.0,
+        2.0
+      ]
+    },
+    {
+      "source": "VAChT_feobv_hc5_bedard_sum",
+      "status": "available",
+      "sha256": "0895af82b4ba12566d2bf2b0ea4d43a66ee1ebbed19f8767696376cc62040fd8",
+      "url": "https://raw.githubusercontent.com/netneurolab/hansen_receptors/f8b41da92a733f99368c1f39d4959731aa1316c1/data/PET_nifti_images/VAChT_feobv_hc5_bedard_sum.nii",
+      "grid": [
+        193,
+        229,
+        193
+      ],
+      "minimum_parcel_voxels": 3035,
+      "affine": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -96.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -132.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -78.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "voxel_size_mm": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "source": "VAChT_feobv_hc18_aghourian_sum",
+      "status": "available",
+      "sha256": "7763a5a8aa79c410ff3ffd16c685e109e0b45c5459147377300a23aabaff7f72",
+      "url": "https://raw.githubusercontent.com/netneurolab/hansen_receptors/f8b41da92a733f99368c1f39d4959731aa1316c1/data/PET_nifti_images/VAChT_feobv_hc18_aghourian_sum.nii",
+      "grid": [
+        193,
+        229,
+        193
+      ],
+      "minimum_parcel_voxels": 3035,
+      "affine": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -96.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -132.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -78.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "voxel_size_mm": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    }
+  ],
+  "background": "finite nonzero PET voxels; native image grid",
+  "vacht_formula": "(3*z3+4*z4+z5+z18)/30, as published code",
+  "vacht_sensitivity": "(3*z3+4*z4+5*z5+18*z18)/30; not in primary collection"
+}

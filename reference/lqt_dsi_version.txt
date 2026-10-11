@@ -1,0 +1,5 @@
+Verified during successful --action=ana execution:
+│DSI Studio "Chen" Aug  3 2022
+Release archive: 2021.12.03
+Binary build: Aug 3 2022
+--version is not a supported CLI version query for this build.

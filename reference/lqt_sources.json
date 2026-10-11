@@ -1,0 +1,36 @@
+{
+  "repository": "https://github.com/jcgriffis/lesion_quantification_toolkit",
+  "commit": "050bc257d686d7e7cba28262429e583bf5be7454",
+  "source_path": "/home/zhenzong/analysis/lesion_connectome_spectral/reference/lqt/source",
+  "atlas_path": "/home/zhenzong/analysis/lesion_connectome_spectral/reference/lqt/source/Support_Tools/Tractography_Atlas/HCP_842",
+  "reference_kind": "HCP842_population_averaged_tractography",
+  "healthy_individual_connectomes": false,
+  "dsi_release": "2021.12.03",
+  "dsi_path": "/home/zhenzong/analysis/lesion_connectome_spectral/tools/dsi_lqt/dsi-studio/dsi_studio",
+  "dsi_sha256": "a3add002c48399e3099f03f43b508f5062adbfb48a2c9a24ae21f11adb1ced73",
+  "dsi_archive_sha256": "e1d54959a3405774921238f17d709a07a437c8453d58e3cde7eb8cc7bc407f1c",
+  "files": {
+    "source/Support_Tools/Tractography_Atlas/HCP_842/HCP842_1mm.fib.gz": {
+      "sha256": "0a58053f38b5cde47ea81f305f07ac9e7c012059bee84af092b9c456c91e26e0",
+      "bytes": 33063688
+    },
+    "source/Support_Tools/Tractography_Atlas/HCP_842/HCP842_QA.nii": {
+      "sha256": "1457b0a7b957b5c2a7d0b7d88183d3e89ddbb0946a6a2747b3af44f43a764eb7",
+      "bytes": 16142464
+    },
+    "source/Support_Tools/Tractography_Atlas/HCP_842/MNI152_T1_1mm.nii.gz": {
+      "sha256": "907debf1cb090b7ef2265da22e513138eb51bf085f0db93361676ea6c92d0060",
+      "bytes": 11000118
+    },
+    "source/Support_Tools/Tractography_Atlas/HCP_842/all_tracts_1mm.trk.gz": {
+      "sha256": "520be5447c305c055373396e4b09ccf42e4f419c5f8fdb283ce9bec5bcef2d81",
+      "bytes": 156156965
+    }
+  },
+  "license": "LQT 源代码遵循上游 GPL-3.0-or-later；数据引用 Griffis 2021 / Yeh 2018",
+  "methods": [
+    "10.1016/j.nicl.2021.102639",
+    "10.1016/j.neuroimage.2018.05.027",
+    "10.1038/s41467-019-12765-7"
+  ]
+}

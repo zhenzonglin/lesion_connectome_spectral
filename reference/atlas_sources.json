@@ -1,0 +1,26 @@
+{
+  "atlas": "lqt135",
+  "commit": "050bc257d686d7e7cba28262429e583bf5be7454",
+  "source": "https://github.com/jcgriffis/lesion_quantification_toolkit/tree/050bc257d686d7e7cba28262429e583bf5be7454/Support_Tools/Parcellations/Schaefer_Yeo/Plus_Subcort",
+  "image_sha256": "e801d5d25ede4b24502e1a91edb4a98940397cc4452af7dc5ffe7de94c21432b",
+  "composition": {
+    "cortex": 100,
+    "subcortex": 8,
+    "cerebellum": 26,
+    "brainstem": 1
+  },
+  "name_correction": "101-108: physical centroids and maximum overlap among HO deep structures; image unchanged",
+  "original_table_export": "raw/labels.tsv exported from upstream MATLAB table; labels.mat retained",
+  "ho_reference": "/home/zhenzong/fsl/data/atlases/HarvardOxford/HarvardOxford-sub-maxprob-thr25-1mm.nii.gz",
+  "ho_sha256": "5772ccce4a0444c9b29c071390db086b7bb0e2074662d2ccecc8c9820fff0fa7",
+  "brainstem_coverage": "whole brainstem mixed gray and white matter; not a nucleus or pure gray parcel",
+  "manual_anatomical_qc": "pending",
+  "files": {
+    "label_audit.tsv": "533482ff3bca34c40ecc12ad005fb02629227c38d7dc069fb8a24c41c4eb9d76",
+    "labels.tsv": "ddabc214cb40d60da9ea518901f536ab7092de79c881253a680232fb6b31804b",
+    "raw/atlas.lfs": "914baccd8c7cd39b0c5bb1ccfbd751bd950286646d7d35f0e153e1d26d92be25",
+    "raw/atlas.nii": "e801d5d25ede4b24502e1a91edb4a98940397cc4452af7dc5ffe7de94c21432b",
+    "raw/labels.mat": "7c7ceeb071e3304bbe4352eec94b3db161759aba37e48e7de6fb605d3740ee41",
+    "raw/labels.tsv": "64febea0063cc2178608b880f6634148c7d481392b0f61bb40667190748f6363"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "atlas": "lqt135",
+  "nodes": 135,
+  "reference": "LQT_HCP842",
+  "population_averaged_atlas": true,
+  "individual_averaging": false,
+  "paired_streamline_count": 91552,
+  "edges": 1375,
+  "components": 6,
+  "isolated_nodes": [
+    "Cerebelum_3_L",
+    "Cerebelum_10_L",
+    "Vermis_1_2",
+    "Vermis_9",
+    "Vermis_10"
+  ],
+  "binary_graph": false,
+  "con_type": "end",
+  "local_adjacency_added": false,
+  "weight_definition": "n_ij / (volume_i_mm3 + volume_j_mm3)",
+  "raw_counts": "lqt/lqt135/Atlas/atlas_lqt135.atlas.count.end.connectivity.mat"
+}

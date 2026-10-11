@@ -1,0 +1,25 @@
+{
+  "status": "passed",
+  "conda_pack_version": "0.0.0",
+  "fix": "TarArchive._add_bytes writes REGTYPE with empty linkname",
+  "environment_packages_modified": false,
+  "threads": 4,
+  "compression_level": 4,
+  "elapsed_seconds": 82.51909954599978,
+  "bytes": 748303650,
+  "sha256": "bbf569ed6985f04569b99f7541ff5a8669d18d8c860d8fd031844b9ba45d9638",
+  "regression": {
+    "status": "passed",
+    "members": 3,
+    "source_inode": 37942100,
+    "corrected_member_type": "REGTYPE",
+    "environment_files_modified": false
+  },
+  "tar_verification": {
+    "gnu_tar_returncode": 0,
+    "gnu_tar_stderr_bytes": 0,
+    "members": 38172,
+    "last_member": "bin/conda-unpack",
+    "nonzero_link_members": 0
+  }
+}
