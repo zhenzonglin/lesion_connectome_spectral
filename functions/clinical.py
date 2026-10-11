@@ -86,6 +86,13 @@ def _field_for_cohort(config: dict, cohort: str, name: str) -> dict:
     if isinstance(overrides, str):
         overrides = {"field": overrides}
     if overrides:
+        if cohort == "validation":
+            allowed = {"field", "source", "missing", "recode"}
+            forbidden = set(overrides) - allowed
+            if forbidden:
+                raise ValueError(
+                    f"validation 变量 {name} 只能覆盖 field/source/missing/recode，不能修改类型合同：{sorted(forbidden)}"
+                )
         specification.update(overrides)
     return specification
 

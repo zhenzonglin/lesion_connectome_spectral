@@ -79,6 +79,8 @@ clinical:
         separator: ''
         kind: string
         width: null
+        # 若 SAS 的组成列是数值型，必须逐列声明 kind/width；不允许静默生成 12.0。
+        field_specs: {}
       member_file: null
       field_map:
         age: AGE

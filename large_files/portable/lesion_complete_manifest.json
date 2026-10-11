@@ -13,16 +13,16 @@
       "bytes": 828
     },
     "config.yaml": {
-      "sha256": "16bf554092a281e4972fa43e37d22f46dd621580344cde7c9279313681953289",
-      "bytes": 13654
+      "sha256": "f067d785e5a63a945f7455f7757c926cd4c6f6ab8925c7ceba2d1969d504c420",
+      "bytes": 13785
     },
     "docs/annotation.md": {
       "sha256": "890d3a623e666b347bcae2cf97edf9288c33387c93435b868a1ec9ba58bc11fc",
       "bytes": 7383
     },
     "docs/clinical.md": {
-      "sha256": "d29ecec5ebd04359baa04597246847705050d271a79921ec4bec3eb805a92867",
-      "bytes": 8965
+      "sha256": "f44891c38a212f7600c0240f5a6bef93fc657ab60d338df8db41269f38959df6",
+      "bytes": 9258
     },
     "docs/code_review.md": {
       "sha256": "5e8295461aad6df1e0e13135a6ff3b8fd1a86f3e43d70a660fb19528e0a47374",
@@ -69,8 +69,8 @@
       "bytes": 19755
     },
     "functions/clinical.py": {
-      "sha256": "a257a63d1242106f4da6e6eb99d42cfadcb3a5ca78127b638de8a8179ec2c770",
-      "bytes": 28039
+      "sha256": "4bb7dd888300d6015f82adb2fa5daac0837942e7d7f83c935e5769cf27fa58e6",
+      "bytes": 28402
     },
     "functions/cohort.py": {
       "sha256": "ffd9f4276b0fb74df7b15813e41fb5bd3a6d4003dd61a2bb1eddef11835efa47",
@@ -532,6 +532,6 @@
   "patient_data_included": false,
   "healthy_images_included": false,
   "healthy_images_regeneration": "env/bin/python annotate.py --healthy --output reference/annotation/healthy",
-  "archive_sha256": "d62017f7c95d5b457cdd8385697b96c8f137f10e691290f2dd9a27da553ed24f",
-  "archive_bytes": 764347386
+  "archive_sha256": "cc20f0bbea105827ddcb8041148c074b6d639b20fd7ebde08162145455759ef2",
+  "archive_bytes": 764347753
 }

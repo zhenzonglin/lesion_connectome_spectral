@@ -21,6 +21,8 @@
 
 因此不需要在配置中逐个填写 SAS 文件名。只需把文件放入对应目录，并在 config.yaml 的 clinical.cohorts.<cohort>.id 中核对 ID 列。若实际 ID 不是默认形式，明确填写 field 或 fields、separator、kind 和必要的 width。代码不会根据相似字段名自动别名。
 
+验证集的复合 ID 若由数值型 SAS 列组成，必须在 `id.field_specs` 中逐列写明格式，例如 `c_code: {kind: numeric, width: 4}`；字符串列使用 `kind: string`。未声明的数值复合 ID 会直接报错，避免把 `12` 静默变成 `12.0` 后错误匹配病灶。
+
 验证集只使用两队列都存在且编码合同一致的变量。当前配置把验证集的 3、6、12 月 mRS 映射到 m3_mrs36、m6_mrs36、m12_mrs36；缺少的 NIHSS 分项、MoCA 和长期 mRS 会记录在共同变量审计中，不生成伪造的缺失结局或零值。
 
 如果同一队列有多张 SAS 表，程序按 subject_id 横向合并；同名字段出现非缺失冲突会停止并写入审计表。每张表内重复 ID、发现/验证队列交集和临床—影像不匹配都会明确记录。成员清单是可选的 TSV，只能有唯一 subject_id 列。
