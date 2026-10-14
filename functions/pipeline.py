@@ -337,6 +337,9 @@ def run_pipeline(root: Path, args, config: dict) -> int:
                 signature = fingerprint(signature_data)
                 target = directory/'stages'/stage/signature[:16]
                 record.update(path=str(target),signature=signature)
+                if stage == 'lesion':
+                    record['cohort_totals'] = {name: len(subjects)
+                        for name, subjects in sources_before.get('cohorts', {}).items()}
                 old_signature = state['stages'].get(stage,{}).get('signature')
                 if old_signature and old_signature != signature:
                     invalidated = {stage}

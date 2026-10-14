@@ -104,13 +104,65 @@ def test_monitor_displays_both_cohorts_and_rejects_old_token(tmp_path, monkeypat
     save_json(tmp_path / "control.json", {"pid": 123, "started": 20, "token": "current"})
     monitor.main()
     output = capsys.readouterr().out
-    assert "discovery" in output and "done=7" in output
-    assert "validation" in output and "done=3" in output
-    assert "failed=1, running=2, queued=4, excluded_empty_lesion=1" in output
+    rows = {parts[0]: parts for line in output.splitlines() if ' | ' in line
+            for parts in [[part.strip() for part in line.split('|')]]}
+    assert rows['阶段/队列'][2:] == ['已完成', '失败', '进行中', '待完成', '排除', '总人数']
+    assert rows['discovery'][2:] == ['7', '1', '2', '4', '1', '15']
+    assert rows['validation'][2:] == ['3', '1', '2', '4', '1', '11']
+    assert rows['lesion / 合计'][2:] == ['10', '2', '4', '8', '2', '26']
 
     state["token"] = "previous"
     save_json(tmp_path / "progress.json", state)
     monitor.main()
     output = capsys.readouterr().out
     assert "等待本次运行刷新进度" in output
-    assert "done=" not in output
+    assert "阶段/队列" not in output
+
+
+def test_planned_cohort_is_queued_before_it_starts(tmp_path):
+    path = tmp_path / 'lesion'
+    stage = {'status': 'running', 'path': str(path),
+             'cohort_totals': {'discovery': 5, 'validation': 7}}
+    save_json(path / 'discovery/progress.json', {
+        'status': 'completed', 'total': 5, 'done': 3, 'failed': 1,
+        'running': 0, 'queued': 0, 'excluded_empty_lesion': 1,
+    })
+    rows = monitor.lesion_rows(stage, ['discovery', 'validation'])
+    assert rows[2][2] == {'total': 7, 'done': 0, 'failed': 0, 'running': 0,
+                          'queued': 7, 'excluded_empty_lesion': 0}
+    total = rows[0][2]
+    assert total['total'] == sum(total[key] for key in monitor.COUNT_KEYS[:-1]) == 12
+    assert total['done'] == 3 and total['queued'] == 7
+
+
+def test_unknown_or_revalidating_counts_are_not_zero(tmp_path):
+    stage = {'status': 'running', 'path': str(tmp_path),
+             'cohort_totals': {'discovery': 5, 'validation': 7}}
+    save_json(tmp_path / 'discovery/manifest.json', {'subjects': []})
+    save_json(tmp_path / 'discovery/progress.json', {
+        'status': 'preflight', 'done': 0, 'failed': 0, 'running': 0, 'queued': 0,
+    })
+    rows = monitor.lesion_rows(stage, ['discovery', 'validation'])
+    assert rows[1][2]['done'] is None
+    assert rows[1][2]['total'] == 5
+    assert rows[0][2]['done'] is None and rows[0][2]['total'] == 12
+    assert monitor.patient_counts({}) == dict.fromkeys(monitor.COUNT_KEYS)
+
+
+def test_legacy_counts_and_nonpatient_stage_use_correct_units(tmp_path, capsys):
+    save_json(tmp_path / 'progress.json', {
+        'status': 'completed_with_errors', 'done': 4, 'failed': 2,
+        'running': 0, 'queued': 0, 'excluded_empty_lesion': 1,
+    })
+    stages = {
+        'lesion': {'status': 'failed', 'path': str(tmp_path)},
+        'association': {'status': 'blocked', 'reason': 'synthetic model diagnostic'},
+    }
+    monitor.print_stage_table(stages, ['discovery', 'validation'])
+    output = capsys.readouterr().out
+    rows = {parts[0]: parts for line in output.splitlines() if ' | ' in line
+            for parts in [[part.strip() for part in line.split('|')]]}
+    assert rows['lesion / 合计'][2:] == ['4', '2', '0', '0', '1', '7']
+    assert rows['association'][2:] == ['—'] * 6
+    assert 'discovery' not in rows and 'validation' not in rows
+    assert 'synthetic model diagnostic' in output

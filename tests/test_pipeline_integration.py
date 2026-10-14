@@ -273,7 +273,13 @@ def test_lesion_dispatch_with_cached_or_omitted_preflight(
     """复用预检或直接运行病灶阶段时，仍须派发两个队列。"""
     from functions import reference
 
-    monkeypatch.setattr(pipeline, "stage_sources", lambda root, stage, config, args: {"source": stage})
+    def sources(root, stage, config, args):
+        result = {"source": stage}
+        if stage == 'lesion':
+            result['cohorts'] = {'discovery': [{'subject_id': 'd1'}],
+                                 'validation': [{'subject_id': 'v1'}, {'subject_id': 'v2'}]}
+        return result
+    monkeypatch.setattr(pipeline, "stage_sources", sources)
     monkeypatch.setattr(pipeline, "code_signature", lambda root, stage: {"code": stage})
     monkeypatch.setattr(pipeline.signal, "signal", lambda *values: None)
     monkeypatch.setattr(reference, "verify_reference", lambda root: {})
@@ -312,6 +318,7 @@ def test_lesion_dispatch_with_cached_or_omitted_preflight(
     state = read_json(directory / "stages.json")
     assert state["status"] == "completed"
     assert state["stages"]["lesion"]["status"] == "completed"
+    assert state["stages"]["lesion"]["cohort_totals"] == {'discovery': 1, 'validation': 2}
     assert dispatched == ["discovery", "validation"]
     assert checked_cohorts == (["discovery", "validation"] if "preflight" in stages else [])
     if cached_preflight:

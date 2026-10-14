@@ -4,6 +4,7 @@ import argparse
 import json
 import math
 import time
+import unicodedata
 from pathlib import Path
 from functions.control import run_directory, matching_process
 from functions.storage import read_json
@@ -17,9 +18,93 @@ def read_status(path: Path) -> dict:
         return {}
 
 
-def case_counts(values: dict) -> str:
-    return ', '.join(f'{key}={values.get(key, 0)}' for key in
-                     ['done', 'failed', 'running', 'queued', 'excluded_empty_lesion'])
+COUNT_KEYS = ('done', 'failed', 'running', 'queued', 'excluded_empty_lesion', 'total')
+STATUS_LABELS = {
+    'completed': '完成', 'completed_with_errors': '完成但有失败',
+    'completed_no_analyzable_subjects': '均被排除', 'running': '运行中',
+    'failed': '失败', 'blocked': '受阻', 'pending': '待开始',
+    'queued': '待开始', 'preflight': '预检中', 'stopped': '已停止',
+    'stopping': '停止中', 'stale': '需更新', 'unknown': '待计数',
+}
+
+
+def patient_counts(values: dict, planned_total: int | None = None) -> dict:
+    """未知人数保留为空；排除、失败、运行和排队与成功人数分别记账。"""
+    result = dict.fromkeys(COUNT_KEYS)
+    result['total'] = planned_total
+    ready = all(key in values for key in COUNT_KEYS[:4])
+    if ready and (values.get('status') != 'preflight' or 'total' in values):
+        result.update({key: int(values.get(key, 0)) for key in COUNT_KEYS[:-1]})
+        result['total'] = int(values['total']) if 'total' in values else sum(
+            result[key] for key in COUNT_KEYS[:-1])
+    return result
+
+
+def lesion_rows(stage: dict, configured_cohorts: list[str]) -> list[tuple]:
+    """读取当前病灶阶段两个队列及合计，不扫描或改写原始病灶。"""
+    path = Path(stage['path']) if stage.get('path') else None
+    totals = stage.get('cohort_totals', {})
+    names = list(totals) if totals else configured_cohorts
+    cohorts = []
+    for name in names:
+        folder = path / name if path else None
+        values = read_status(folder / 'progress.json') if folder else {}
+        total = totals.get(name)
+        fresh = folder is not None and not any(
+            (folder / entry).exists() for entry in ['manifest.json', 'state.sqlite', 'subjects'])
+        if total is not None and fresh and (not values or values.get('status') == 'preflight'):
+            values = dict(values, status=values.get('status', 'pending'),
+                          total=total, done=0, failed=0, running=0, queued=total,
+                          excluded_empty_lesion=0)
+        cohorts.append((f'  {name}', values.get('status', 'unknown'), patient_counts(values, total)))
+
+    # 兼容早期尚未按队列分目录的病灶结果。
+    legacy = patient_counts(read_status(path / 'progress.json')) if path else patient_counts({})
+    if not totals and legacy['total'] is not None and all(row[2]['total'] is None for row in cohorts):
+        return [('lesion / 合计', stage['status'], legacy)]
+    aggregate = {
+        key: sum(row[2][key] for row in cohorts)
+        if cohorts and all(row[2][key] is not None for row in cohorts) else None
+        for key in COUNT_KEYS
+    }
+    return [('lesion / 合计', stage['status'], aggregate), *cohorts]
+
+
+def print_stage_table(stages: dict, configured_cohorts: list[str]) -> None:
+    rows, details = [], []
+    for name, stage in stages.items():
+        if name == 'lesion':
+            rows.extend(lesion_rows(stage, configured_cohorts))
+        else:
+            rows.append((name, stage['status'], patient_counts({})))
+            if stage.get('path'):
+                values = read_status(Path(stage['path']) / 'progress.json')
+                current = ', '.join(f'{key}={value}' for key, value in values.items()
+                                    if key in ['outcome', 'mode', 'completed', 'planned',
+                                               'target', 'fold', 'iteration'])
+                if current:
+                    details.append(f'{name}: {current}')
+        if stage.get('reason'):
+            details.append(f"{name}: {stage['reason']}")
+
+    table = [('阶段/队列', '状态', '已完成', '失败', '进行中', '待完成', '排除', '总人数')]
+    table += [(name, STATUS_LABELS.get(status, status),
+               *(str(counts[key]) if counts[key] is not None else '—' for key in COUNT_KEYS))
+              for name, status, counts in rows]
+    def width(value):
+        return sum(2 if unicodedata.east_asian_width(char) in 'WF' else 1 for char in value)
+    widths = [max(width(row[column]) for row in table) for column in range(8)]
+    for index, row in enumerate(table):
+        cells = []
+        for column, value in enumerate(row):
+            padding = ' ' * (widths[column] - width(value))
+            cells.append(value + padding if column < 2 else padding + value)
+        print(' | '.join(cells), flush=True)
+        if index == 0:
+            print('-+-'.join('-' * value for value in widths), flush=True)
+    print('人数对应病灶逐例任务；待完成为排队人数，失败与排除单列；—表示无逐例人数或尚无计数。', flush=True)
+    for detail in details:
+        print(detail, flush=True)
 
 
 def main() -> None:
@@ -58,24 +143,8 @@ def main() -> None:
             print(f"等待本次运行刷新进度 | PID {control.get('pid')} | 进程存活 {progress['process_alive']}", flush=True)
         elif 'stages' in progress:
             print(f"阶段进度 | {progress['status']} | 进程存活 {progress['process_alive']}",flush=True)
-            for name,stage in progress['stages'].items():
-                counts = ''
-                stage_path = Path(stage['path']) if stage.get('path') else None
-                values = read_status(stage_path / 'progress.json') if stage_path else {}
-                cohorts = {}
-                if name == 'lesion' and stage_path:
-                    for cohort in ['discovery', 'validation']:
-                        cohort_values = read_status(stage_path / cohort / 'progress.json')
-                        if cohort_values:
-                            cohorts[cohort] = cohort_values
-                if name == 'lesion' and values:
-                    counts=' | '+case_counts(values)
-                    counts+=f" | {values.get('subjects_per_minute')} 例/分；预计剩余 {values.get('eta_seconds')} 秒"
-                elif values:
-                    counts=' | '+', '.join(f'{key}={value}' for key,value in values.items() if key in ['outcome','mode','completed','planned','target','fold','iteration'])
-                print(f"{name:14} {stage['status']:12}{counts} {stage.get('reason','')}",flush=True)
-                for cohort, values in cohorts.items():
-                    print(f"  {cohort:12} {values.get('status', 'unknown'):12} | {case_counts(values)}", flush=True)
+            cohorts = list(config.get('subjects', {}).get('cohorts', {})) or ['discovery', 'validation']
+            print_stage_table(progress['stages'], cohorts)
         else:
             print(json.dumps(progress, ensure_ascii=False, indent=2), flush=True)
         if not args.watch:

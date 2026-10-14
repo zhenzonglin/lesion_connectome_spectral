@@ -135,7 +135,7 @@ SAS导入保留标签和特殊缺失元信息；不根据字段顺序合并，�
 | `functions/runner.py::coordinate` | SQLite记录病例；ProcessPoolExecutor患者并行；完整文件检查后提交 | 一个成功患者仅紧凑NPZ与record；状态与SHA一致 |
 | `functions/pipeline.py::run_pipeline` | 按阶段依赖和指纹执行；下游缺依赖明确阻止；完成清单核对产物 | stages.json、complete.json、上下游签名；续跑不会混入变更输入 |
 | `run_child`、R `check_stop` | 只管理本次创建的子进程；正常停止在病例/统计检查点处理 | 停止后状态stopped；未提交部分可重算，已提交结果不覆盖 |
-| `monitor.py` | 默认每30秒持续读取状态和经身份校验的进程，`--once`单次查看 | 各阶段、双队列病例计数和模型当前任务；识别前次运行记录，失效PID不能当运行中 |
+| `monitor.py` | 默认每30秒持续读取状态和经身份校验的进程，`--once`单次查看 | 双队列及合计的已完成/失败/进行中/待完成/排除人数；未知显示—，统计任务不冒充人数；识别前次运行记录 |
 | `stop.py`、`functions/control.py` | 核查PID、创建时间、启动token、路径；立即中断只限本任务 | 不应使用pkill或终止WSL等广泛动作 |
 | `package.py`、`setup.sh` | 代码、环境、冻结参考和注释资源离线移植 | 文件清单和SHA；默认排除SAS、病灶、结果、archive和缓存 |
 
