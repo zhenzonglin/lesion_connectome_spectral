@@ -37,6 +37,8 @@ bash setup.sh
 
 临床目录按 discovery/validation 分开；程序自动读取各目录全部 .sas7bdat。发现集使用 code_n，验证集使用 c_code+p_code 复合ID；字段映射在 config.yaml 中显式填写。死亡仅由对应 mRS=6 判定，MoCA 已完成教育加分。缺失结局不插补，死后MoCA不填零。
 
+死后仍有 MoCA 分数时默认停止。研究者确认后，可显式设置 `clinical.death.moca_conflict_policy: structural_missing`，仅将首次 mRS=6 当次及之后的 MoCA 设为结构性缺失，保留患者、mRS 和死亡前有效分数。审计表保留处理前的映射分数、首次死亡记录月份及处理动作；死亡后出现非死亡 mRS 的矛盾仍会停止。原始 SAS 不修改。
+
 ## 统计与组合
 
 每个结局使用结局已观察、影像完整的固定名单，只对协变量多重插补。默认30套、20次迭代，诊断不足最多100次。同一模态G/W联合D1检验，系数与区间用Rubin规则。有序模型报告比例优势诊断和阈值敏感性；MoCA采用HC3线性模型。纵向mRS为可选有序混合模型，默认关闭。

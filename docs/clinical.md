@@ -42,7 +42,7 @@
 
 死亡状态只由对应随访的 mRS 是否等于 6 推断，不读取独立 death 字段或另行配置死亡编码。记录 death_<month>m 状态；mRS=6 后再次出现非缺失的非 6 mRS 会被报告为冲突。mRS 缺失不自动补成 6，也不因缺失推断死亡。
 
-死亡后缺失 MoCA 额外标记 `moca_*m_structural_missing`，不插补、不记零。死后非缺失 MoCA 报错。MoCA 已在上游完成教育加分；本项目不识别版本、不重复加分。死亡规则只对启用分析所需月份执行。
+死亡后缺失 MoCA 额外标记 `moca_*m_structural_missing`，不插补、不记零。`clinical.death.moca_conflict_policy` 默认 `error`，死后非缺失 MoCA 会停止临床阶段。研究者明确确认按 mRS=6 处理后，可设为 `structural_missing`：仅将首次 mRS=6 当次及之后的 MoCA 设为结构性缺失，保留患者、全部 mRS 和死亡之前的 MoCA，不改写原始 SAS。`audit/death_conflicts.tsv` 保留处理前的映射分数、首次记录死亡的月份、处理动作和策略；它不是对原始死亡日期的核实。任何死亡后出现非缺失非 6 的 mRS 仍然停止，不能用该选项绕过。MoCA 已在上游完成教育加分；本项目不识别版本、不重复加分。死亡规则只对启用分析所需月份执行。
 
 ## 3. 逐步代码核查表
 

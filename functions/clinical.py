@@ -425,10 +425,14 @@ def derive_variables(frame: pd.DataFrame, derived: dict) -> pd.DataFrame:
 
 def check_death(raw: pd.DataFrame, mapped: pd.DataFrame, config: dict, output_dir: Path, cohort: str = "discovery") -> pd.DataFrame:
     """仅由对应月份 mRS=6 推断死亡；死后 MoCA 作为结构性缺失。"""
+    policy = config['clinical'].get('death', {}).get('moca_conflict_policy', 'error')
+    if policy not in ['error', 'structural_missing']:
+        raise ValueError('clinical.death.moca_conflict_policy 必须为 error 或 structural_missing')
     result = mapped.copy()
     conflicts = []
     required = required_variables(config)
     previous_dead = pd.Series(False, index=result.index)
+    first_death = pd.Series(np.nan, index=result.index)
     months = sorted(
         int(re.search(r"_(\d+)m$", name).group(1))
         for name in required
@@ -440,22 +444,35 @@ def check_death(raw: pd.DataFrame, mapped: pd.DataFrame, config: dict, output_di
             continue
         values = pd.to_numeric(result[mrs], errors="coerce")
         dead_now = values.eq(6)
+        first_death.loc[dead_now & ~previous_dead] = month
         alive_after_death = previous_dead & values.notna() & ~dead_now
         for index in result.index[alive_after_death]:
             conflicts.append({"subject_id": result.loc[index, "subject_id"],
-                              "month": month, "reason": "mrs_observed_after_prior_death"})
+                              "month": month, "reason": "mrs_observed_after_prior_death",
+                              "original_value": values.loc[index],
+                              "first_death_month": int(first_death.loc[index]),
+                              "action": "blocked", "policy": policy})
         dead = previous_dead | dead_now
         result[f"death_{month}m"] = dead.astype(float)
         if moca in result:
             for index in result.index[dead & result[moca].notna()]:
                 conflicts.append({"subject_id": result.loc[index, "subject_id"],
-                                  "month": month, "reason": "moca_observed_after_death"})
+                                  "month": month, "reason": "moca_observed_after_death",
+                                  "original_value": result.loc[index, moca],
+                                  "first_death_month": int(first_death.loc[index]),
+                                  "action": "set_structural_missing" if policy == 'structural_missing' else "blocked",
+                                  "policy": policy})
             result.loc[dead, moca] = np.nan
             result[f"{moca}_structural_missing"] = dead
         previous_dead = dead
-    write_audit(output_dir, "death_conflicts", conflicts, ["subject_id", "month", "reason"])
-    if conflicts:
+    write_audit(output_dir, "death_conflicts", conflicts,
+                ["subject_id", "month", "reason", "original_value", "first_death_month", "action", "policy"])
+    if any(item['action'] == 'blocked' for item in conflicts):
         raise ValueError("死亡状态与临床结局冲突，见 audit/death_conflicts.tsv")
+    if conflicts:
+        count = len({item['subject_id'] for item in conflicts})
+        print(f'{cohort}: 已按 mRS=6 规则将 {count} 人的 {len(conflicts)} 条 MoCA '
+              f'设为结构性缺失；处理前分数和操作见 {output_dir}/audit/death_conflicts.tsv', flush=True)
     return result
 
 

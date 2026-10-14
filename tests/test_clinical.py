@@ -121,6 +121,73 @@ def test_death_conflict_and_structural_missing(tmp_path, config):
         clinical.assert_disjoint({"001","002"}, {"002","003"})
 
 
+def test_post_death_moca_is_strict_by_default(tmp_path, config):
+    config['clinical']['death'].pop('moca_conflict_policy', None)
+    config['statistics']['families']['mrs_single'].update(enabled=True, outcomes=['mrs_3m'])
+    config['statistics']['families']['moca']['enabled'] = True
+    mapped = pd.DataFrame({'subject_id': ['synthetic'], 'mrs_3m': [6], 'moca_3m': [25]})
+    with pytest.raises(ValueError, match='死亡状态'):
+        clinical.check_death(mapped, mapped, config, tmp_path)
+    audit = pd.read_csv(tmp_path / 'audit/death_conflicts.tsv', sep='\t')
+    assert audit['action'].tolist() == ['blocked']
+    assert audit['original_value'].tolist() == [25]
+    assert mapped.loc[0, 'moca_3m'] == 25
+
+
+def test_approved_moca_policy_preserves_patients_and_audits_eight_scores(tmp_path, config):
+    config['clinical']['death']['moca_conflict_policy'] = 'structural_missing'
+    config['statistics']['families']['mrs_single'].update(enabled=True, outcomes=['mrs_3m', 'mrs_12m'])
+    config['statistics']['families']['moca']['enabled'] = True
+    mapped = pd.DataFrame({
+        'subject_id': [f'synthetic{i}' for i in range(8)],
+        'mrs_3m': [6, 6, 1, 1, 1, 1, 1, 0],
+        'mrs_12m': [6, np.nan, 6, 6, 6, 6, 6, 0],
+        'moca_3m': [20, 21, 22, 23, 24, 25, 26, 27],
+        'moca_12m': [10, np.nan, 12, 13, 14, 15, 16, 28],
+        'age': [60] * 8,
+    })
+    before = mapped.copy(deep=True)
+    result = clinical.check_death(mapped, mapped, config, tmp_path)
+    pd.testing.assert_frame_equal(mapped, before)
+    pd.testing.assert_frame_equal(result[['subject_id', 'mrs_3m', 'mrs_12m', 'age']],
+                                  before[['subject_id', 'mrs_3m', 'mrs_12m', 'age']])
+    assert result.loc[:1, 'moca_3m'].isna().all()
+    assert result.loc[2:, 'moca_3m'].tolist() == before.loc[2:, 'moca_3m'].tolist()
+    assert result.loc[:6, 'moca_12m'].isna().all()
+    assert result.loc[7, 'moca_12m'] == 28
+    assert result['moca_3m_structural_missing'].tolist() == [True, True] + [False] * 6
+    assert result['moca_12m_structural_missing'].tolist() == [True] * 7 + [False]
+    audit = pd.read_csv(tmp_path / 'audit/death_conflicts.tsv', sep='\t')
+    assert len(audit) == 8 and audit.subject_id.nunique() == 7
+    assert audit.groupby('month').size().to_dict() == {3: 2, 12: 6}
+    assert set(audit['action']) == {'set_structural_missing'}
+    assert set(audit['policy']) == {'structural_missing'}
+    assert sorted(audit['original_value']) == [10, 12, 13, 14, 15, 16, 20, 21]
+    assert audit.loc[audit['month'] == 3, 'first_death_month'].eq(3).all()
+
+
+def test_mrs_conflict_still_blocks_with_approved_moca_policy(tmp_path, config):
+    config['clinical']['death']['moca_conflict_policy'] = 'structural_missing'
+    config['statistics']['families']['mrs_single'].update(enabled=True, outcomes=['mrs_3m', 'mrs_6m'])
+    config['statistics']['families']['moca']['enabled'] = True
+    mapped = pd.DataFrame({'subject_id': ['synthetic'], 'mrs_3m': [6], 'mrs_6m': [1],
+                           'moca_3m': [25], 'moca_6m': [24]})
+    with pytest.raises(ValueError, match='死亡状态'):
+        clinical.check_death(mapped, mapped, config, tmp_path)
+    audit = pd.read_csv(tmp_path / 'audit/death_conflicts.tsv', sep='\t')
+    mrs = audit[audit['reason'] == 'mrs_observed_after_prior_death']
+    assert mrs['action'].tolist() == ['blocked']
+    assert mrs['original_value'].tolist() == [1]
+    assert mrs['first_death_month'].tolist() == [3]
+
+
+def test_unknown_moca_conflict_policy_is_rejected(tmp_path, config):
+    config['clinical']['death']['moca_conflict_policy'] = 'ignore'
+    mapped = pd.DataFrame({'subject_id': ['synthetic']})
+    with pytest.raises(ValueError, match='moca_conflict_policy'):
+        clinical.check_death(mapped, mapped, config, tmp_path)
+
+
 def test_prepare_preserves_id_and_observed_outcomes(tmp_path, config, monkeypatch):
     make_root(tmp_path)
     original = raw_frame(config)

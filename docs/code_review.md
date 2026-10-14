@@ -62,7 +62,7 @@ G/W/Jmax属于本项目的损伤指标扩展，Preti文献提供健康谐波定�
 
 详细字段和代码逐步表见 `docs/clinical.md`。顺序为 `preflight_clinical → load_sources/normalize_ids/read_sas → map_variables → check_death → derive_variables → prepare_clinical`。主要包是pyreadstat、pandas、NumPy。
 
-SAS导入保留标签和特殊缺失元信息；不根据字段顺序合并，不默认取重复第一条。每个来源使用明确base/append/join操作。发现与验证的原始队列成员做重叠检查，不能只检查影像成功者。单独的NIHSS `9`不可测编码按字段处理。死亡冲突报错，死后MoCA为结构性缺失，均不填补结局。
+SAS导入保留标签和特殊缺失元信息；不根据字段顺序合并，不默认取重复第一条。每个来源使用明确base/append/join操作。发现与验证的原始队列成员做重叠检查，不能只检查影像成功者。单独的NIHSS `9`不可测编码按字段处理。死亡冲突默认报错；研究者显式配置 `clinical.death.moca_conflict_policy: structural_missing` 后，死后MoCA原分数保留审计并设为结构性缺失，患者和其他有效记录保留。跨月份mRS死亡矛盾仍报错；结局均不插补。
 
 输出在临床阶段的 `discovery/analysis.tsv.gz` 和 `validation/analysis.tsv.gz`，列包括subject_id、258个g/w特征、原始体积和内部临床变量。`audit/`保存缺失、来源冲突、未匹配与样本流向。一个结局缺失不删除该人在其他结局的记录；筛选发生在下一步每个结局内。
 
