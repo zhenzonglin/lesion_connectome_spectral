@@ -54,6 +54,9 @@ def test_monitor_handles_previous_progress_while_new_process_is_alive(
     assert "等待本次运行刷新进度" in output
     assert state["index"] == int(watch)
     assert sleeps == ([interval, interval] if watch else [])
+    assert ("单次查看" in output) == (not watch)
+    if not watch:
+        assert "秒刷新" not in output
     if watch:
         assert "阶段进度 | completed | 进程存活 False" in output
         assert "继续等待状态更新" in output
@@ -96,7 +99,7 @@ def test_monitor_displays_both_cohorts_and_rejects_old_token(tmp_path, monkeypat
     for cohort, done in [("discovery", 7), ("validation", 3)]:
         save_json(stage_path / cohort / "progress.json", {
             "status": "running", "done": done, "failed": 1, "running": 2,
-            "queued": 4, "excluded_empty_lesion": 1,
+            "queued": 4, "excluded_empty_lesion": 1, "heartbeat": 30,
         })
     state = {"status": "running", "heartbeat": 30, "token": "current",
              "stages": {"lesion": {"status": "running", "path": str(stage_path)}}}
@@ -110,6 +113,7 @@ def test_monitor_displays_both_cohorts_and_rejects_old_token(tmp_path, monkeypat
     assert rows['discovery'][2:] == ['7', '1', '2', '4', '1', '15']
     assert rows['validation'][2:] == ['3', '1', '2', '4', '1', '11']
     assert rows['lesion / 合计'][2:] == ['10', '2', '4', '8', '2', '26']
+    assert "PID 123" in output
 
     state["token"] = "previous"
     save_json(tmp_path / "progress.json", state)
@@ -166,3 +170,49 @@ def test_legacy_counts_and_nonpatient_stage_use_correct_units(tmp_path, capsys):
     assert rows['association'][2:] == ['—'] * 6
     assert 'discovery' not in rows and 'validation' not in rows
     assert 'synthetic model diagnostic' in output
+
+
+@pytest.mark.parametrize('status', ['pending', 'queued', 'stale', 'blocked'])
+def test_unstarted_stage_does_not_show_previous_attempt_counts(tmp_path, status):
+    save_json(tmp_path / 'validation/progress.json', {
+        'status': 'completed_with_errors', 'heartbeat': 10, 'total': 17,
+        'done': 0, 'failed': 17, 'running': 0, 'queued': 0,
+    })
+    stage = {'status': status, 'path': str(tmp_path),
+             'cohort_totals': {'discovery': 10, 'validation': 17}}
+    rows = monitor.lesion_rows(stage, ['discovery', 'validation'])
+    assert len(rows) == 3
+    for _, row_status, counts in rows:
+        assert row_status == status
+        assert counts == dict.fromkeys(monitor.COUNT_KEYS)
+
+
+@pytest.mark.parametrize('status', ['running', 'failed', 'stopped'])
+def test_unrevisited_cohort_is_not_a_current_failure(tmp_path, status):
+    stage = {'status': status, 'path': str(tmp_path),
+             'cohort_totals': {'discovery': 5, 'validation': 7}}
+    save_json(tmp_path / 'discovery/progress.json', {
+        'status': 'running', 'heartbeat': 30, 'total': 5,
+        'done': 2, 'failed': 1, 'running': 1, 'queued': 1,
+    })
+    save_json(tmp_path / 'validation/progress.json', {
+        'status': 'completed_with_errors', 'heartbeat': 10, 'total': 7,
+        'done': 0, 'failed': 7, 'running': 0, 'queued': 0,
+    })
+    rows = monitor.lesion_rows(stage, ['discovery', 'validation'], run_started=20)
+    assert rows[1][2]['failed'] == 1
+    assert rows[2][1] == 'awaiting_revalidation'
+    assert rows[2][2]['failed'] is None and rows[2][2]['total'] == 7
+    assert rows[0][2]['failed'] is None and rows[0][2]['total'] == 12
+
+
+def test_verified_completed_stage_can_reuse_old_counts(tmp_path):
+    stage = {'status': 'completed', 'path': str(tmp_path)}
+    for name in ['discovery', 'validation']:
+        save_json(tmp_path / name / 'progress.json', {
+            'status': 'completed', 'heartbeat': 10, 'total': 5,
+            'done': 4, 'failed': 0, 'running': 0, 'queued': 0,
+            'excluded_empty_lesion': 1,
+        })
+    rows = monitor.lesion_rows(stage, ['discovery', 'validation'], run_started=20)
+    assert rows[0][2]['done'] == 8 and rows[0][2]['total'] == 10

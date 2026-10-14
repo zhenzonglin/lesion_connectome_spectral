@@ -25,6 +25,7 @@ STATUS_LABELS = {
     'failed': '失败', 'blocked': '受阻', 'pending': '待开始',
     'queued': '待开始', 'preflight': '预检中', 'stopped': '已停止',
     'stopping': '停止中', 'stale': '需更新', 'unknown': '待计数',
+    'awaiting_revalidation': '待复核',
 }
 
 
@@ -40,15 +41,28 @@ def patient_counts(values: dict, planned_total: int | None = None) -> dict:
     return result
 
 
-def lesion_rows(stage: dict, configured_cohorts: list[str]) -> list[tuple]:
+def lesion_rows(stage: dict, configured_cohorts: list[str],
+                run_started: float | None = None) -> list[tuple]:
     """读取当前病灶阶段两个队列及合计，不扫描或改写原始病灶。"""
+    # 续跑开始时仍保留旧路径和计划人数；在阶段重新核查输入前不能展示为当前计数。
+    if stage['status'] in ['pending', 'queued', 'stale', 'blocked']:
+        return [(name, stage['status'], patient_counts({}))
+                for name in ['lesion / 合计', *(f'  {name}' for name in configured_cohorts)]]
+
+    def current_progress(file):
+        values = read_status(file)
+        if (values and run_started is not None and stage['status'] != 'completed'
+                and values.get('heartbeat', 0) < run_started):
+            return {'status': 'awaiting_revalidation'}
+        return values
+
     path = Path(stage['path']) if stage.get('path') else None
     totals = stage.get('cohort_totals', {})
     names = list(totals) if totals else configured_cohorts
     cohorts = []
     for name in names:
         folder = path / name if path else None
-        values = read_status(folder / 'progress.json') if folder else {}
+        values = current_progress(folder / 'progress.json') if folder else {}
         total = totals.get(name)
         fresh = folder is not None and not any(
             (folder / entry).exists() for entry in ['manifest.json', 'state.sqlite', 'subjects'])
@@ -59,7 +73,7 @@ def lesion_rows(stage: dict, configured_cohorts: list[str]) -> list[tuple]:
         cohorts.append((f'  {name}', values.get('status', 'unknown'), patient_counts(values, total)))
 
     # 兼容早期尚未按队列分目录的病灶结果。
-    legacy = patient_counts(read_status(path / 'progress.json')) if path else patient_counts({})
+    legacy = patient_counts(current_progress(path / 'progress.json')) if path else patient_counts({})
     if not totals and legacy['total'] is not None and all(row[2]['total'] is None for row in cohorts):
         return [('lesion / 合计', stage['status'], legacy)]
     aggregate = {
@@ -70,11 +84,12 @@ def lesion_rows(stage: dict, configured_cohorts: list[str]) -> list[tuple]:
     return [('lesion / 合计', stage['status'], aggregate), *cohorts]
 
 
-def print_stage_table(stages: dict, configured_cohorts: list[str]) -> None:
+def print_stage_table(stages: dict, configured_cohorts: list[str],
+                      run_started: float | None = None) -> None:
     rows, details = [], []
     for name, stage in stages.items():
         if name == 'lesion':
-            rows.extend(lesion_rows(stage, configured_cohorts))
+            rows.extend(lesion_rows(stage, configured_cohorts, run_started))
         else:
             rows.append((name, stage['status'], patient_counts({})))
             if stage.get('path'):
@@ -103,6 +118,7 @@ def print_stage_table(stages: dict, configured_cohorts: list[str]) -> None:
         if index == 0:
             print('-+-'.join('-' * value for value in widths), flush=True)
     print('人数对应病灶逐例任务；待完成为排队人数，失败与排除单列；—表示无逐例人数或尚无计数。', flush=True)
+    print('续跑待开始或待复核的队列不沿用上轮计数；人数将在本轮核查后更新。', flush=True)
     for detail in details:
         print(detail, flush=True)
 
@@ -136,15 +152,16 @@ def main() -> None:
             progress.get("heartbeat", 0) < control.get("started", 0)
             or (progress.get("token") is not None and progress["token"] != control.get("token"))
         )
-        print(f"\n更新时间 {time.strftime('%H:%M:%S')} | 每 {args.interval:g} 秒刷新", flush=True)
+        refresh = f'每 {args.interval:g} 秒刷新' if args.watch else '单次查看'
+        print(f"\n更新时间 {time.strftime('%H:%M:%S')} | {refresh}", flush=True)
         if not control:
             print("等待总控身份记录；监控不会自行启动分析。", flush=True)
         elif previous_progress or "status" not in progress:
             print(f"等待本次运行刷新进度 | PID {control.get('pid')} | 进程存活 {progress['process_alive']}", flush=True)
         elif 'stages' in progress:
-            print(f"阶段进度 | {progress['status']} | 进程存活 {progress['process_alive']}",flush=True)
+            print(f"阶段进度 | {progress['status']} | 进程存活 {progress['process_alive']} | PID {control.get('pid')}",flush=True)
             cohorts = list(config.get('subjects', {}).get('cohorts', {})) or ['discovery', 'validation']
-            print_stage_table(progress['stages'], cohorts)
+            print_stage_table(progress['stages'], cohorts, control.get('started'))
         else:
             print(json.dumps(progress, ensure_ascii=False, indent=2), flush=True)
         if not args.watch:
