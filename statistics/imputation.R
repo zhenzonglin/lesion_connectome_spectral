@@ -14,7 +14,15 @@ endpoint_data <- function(data, outcome, job) {
   if (identical(outcome$type, "longitudinal")) {
     observed <- rowSums(!is.na(data[, as_chars(outcome$visit_columns), drop = FALSE])) > 0
   } else observed <- !is.na(data[[outcome$name]])
-  result <- data[complete_images & observed, columns, drop = FALSE]
+  excluded <- rep(FALSE, nrow(data))
+  # 在插补、拟合、折分和外部验证的共同入口筛选，不以填补缺失值代替排除。
+  if (grepl("^(mrs|moca)(_|$)", outcome$name) && "mrs_moca_outcome_excluded" %in% names(data)) {
+    flag <- tolower(as.character(data$mrs_moca_outcome_excluded))
+    if (anyNA(flag) || any(!flag %in% c("0", "1", "false", "true")))
+      stop("mrs_moca_outcome_excluded 必须为明确的 0/1 标记")
+    excluded <- flag %in% c("1", "true")
+  }
+  result <- data[complete_images & observed & !excluded, columns, drop = FALSE]
   if (nrow(result) < 3L) stop("有效结局和影像样本不足: ", outcome$name)
   result <- prepare_types(result, job$variables %or% list())
   immutable <- unique(c("lesion_volume_mm3", "log_lesion_volume", "log_volume", as_chars(job$immutable_columns)))

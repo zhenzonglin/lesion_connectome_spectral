@@ -37,7 +37,9 @@ bash setup.sh
 
 临床目录按 discovery/validation 分开；程序自动读取各目录全部 .sas7bdat。发现集使用 code_n，验证集使用 c_code+p_code 复合ID；字段映射在 config.yaml 中显式填写。死亡仅由对应 mRS=6 判定，MoCA 已完成教育加分。缺失结局不插补，死后MoCA不填零。
 
-死后仍有 MoCA 分数时默认停止。研究者确认后，可显式设置 `clinical.death.moca_conflict_policy: structural_missing`，仅将首次 mRS=6 当次及之后的 MoCA 设为结构性缺失，保留患者、mRS 和死亡前有效分数。审计表保留处理前的映射分数、首次死亡记录月份及处理动作；死亡后出现非死亡 mRS 的矛盾仍会停止。原始 SAS 不修改。
+死后仍有 MoCA 分数时默认停止。研究者确认后，可显式设置 `clinical.death.moca_conflict_policy: structural_missing`，仅将首次 mRS=6 当次及之后的 MoCA 设为结构性缺失，保留患者、mRS 和死亡前有效分数。审计表保留处理前的映射分数、首次死亡记录月份及处理动作；死亡后出现非死亡 mRS 的矛盾默认仍会停止。原始 SAS 不修改。
+
+若研究者决定将存在跨月 mRS 死亡矛盾的患者排除出全部 mRS/MoCA 结局，可单独设置 `clinical.cohorts.validation.death.mrs_conflict_policy: exclude_mrs_moca`。该选择只作用于验证集，原 mRS/MoCA 分数保留在分析宽表和审计中，患者仍可参与 NIHSS 等其他分析。R 入口在插补、关联模型、组合学习和外部验证之前执行结局排除；纵向 mRS 也排除全部访视。`audit/outcome_exclusions.tsv` 保存逐人清单，`audit/sample_flow.tsv` 将结局排除人数与普通缺失分列。详见 [临床合同](docs/clinical.md)。
 
 ## 统计与组合
 

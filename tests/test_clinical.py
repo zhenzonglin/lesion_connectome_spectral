@@ -188,6 +188,96 @@ def test_unknown_moca_conflict_policy_is_rejected(tmp_path, config):
         clinical.check_death(mapped, mapped, config, tmp_path)
 
 
+def test_validation_excludes_23_patients_with_25_conflicts_without_changing_scores(tmp_path, config):
+    config['clinical']['death']['moca_conflict_policy'] = 'structural_missing'
+    config['clinical']['cohorts']['validation']['death'] = {'mrs_conflict_policy': 'exclude_mrs_moca'}
+    config['statistics']['families']['mrs_single'].update(enabled=True, outcomes=['mrs_3m', 'mrs_6m', 'mrs_12m'])
+    config['statistics']['families']['moca']['enabled'] = True
+    mapped = pd.DataFrame({
+        'subject_id': [f'synthetic{i}' for i in range(24)],
+        'mrs_3m': [6] * 22 + [2, 6],
+        'mrs_6m': [0, 1, 4, 5] * 5 + [6] * 4,
+        'mrs_12m': [1, 5] + [6] * 18 + [0, 4, 1, 6],
+        'moca_3m': [25] * 24, 'moca_6m': [24] * 24, 'moca_12m': [23] * 24,
+        'age': list(range(50, 74)), 'nihss_1a': [0, 1, 2] * 8,
+    }, index=range(100, 124))
+    before = mapped.copy(deep=True)
+    result = clinical.check_death(mapped, mapped, config, tmp_path, 'validation')
+    pd.testing.assert_frame_equal(mapped, before)
+    pd.testing.assert_frame_equal(result.loc[100:122, before.columns], before.loc[100:122], check_dtype=False)
+    assert result.mrs_moca_outcome_excluded.tolist() == [1] * 23 + [0]
+    assert result.loc[100:122, ['death_3m', 'death_6m', 'death_12m']].isna().all().all()
+    assert result.loc[123, ['moca_3m', 'moca_6m', 'moca_12m']].isna().all()
+    for name in ['mrs_3m', 'mrs_6m', 'mrs_12m', 'mrs_longitudinal', 'moca_3m', 'moca_12m']:
+        assert clinical.outcome_excluded(result, name).sum() == 23
+    assert not clinical.outcome_excluded(result, 'nihss_1a').any()
+    assert not clinical.outcome_excluded(result, 'prestroke_mrs').any()
+    audit = pd.read_csv(tmp_path / 'audit/death_conflicts.tsv', sep='\t')
+    mrs = audit[audit.reason.eq('mrs_observed_after_prior_death')]
+    assert len(mrs) == 25 and mrs.subject_id.nunique() == 23
+    assert mrs.groupby('month').size().to_dict() == {6: 20, 12: 5}
+    assert mrs.action.eq('exclude_mrs_moca').all()
+    assert mrs.policy.eq('exclude_mrs_moca').all()
+    exclusions = pd.read_csv(tmp_path / 'audit/outcome_exclusions.tsv', sep='\t')
+    assert len(exclusions) == 23 and exclusions.conflict_records.sum() == 25
+    assert exclusions.loc[exclusions.subject_id.eq('synthetic22'), 'first_death_month'].item() == 6
+    assert exclusions.moca_3m.eq(25).all()
+    # 验证集选择不会自动放宽发现集；默认仍拦截相同矛盾。
+    with pytest.raises(ValueError, match='死亡状态'):
+        clinical.check_death(mapped, mapped, config, tmp_path / 'discovery', 'discovery')
+
+
+def test_unknown_mrs_policy_is_rejected(tmp_path, config):
+    config['clinical']['cohorts']['validation']['death'] = {'mrs_conflict_policy': 'ignore'}
+    mapped = pd.DataFrame({'subject_id': ['synthetic']})
+    with pytest.raises(ValueError, match='mrs_conflict_policy'):
+        clinical.check_death(mapped, mapped, config, tmp_path, 'validation')
+
+
+def test_mrs_exclusion_does_not_hide_unrelated_moca_conflict(tmp_path, config):
+    config['clinical']['cohorts']['validation']['death'] = {'mrs_conflict_policy': 'exclude_mrs_moca'}
+    config['statistics']['families']['mrs_single'].update(enabled=True, outcomes=['mrs_3m', 'mrs_6m'])
+    mapped = pd.DataFrame({'subject_id': ['conflict', 'other'], 'mrs_3m': [6, 6],
+                           'mrs_6m': [1, 6], 'moca_3m': [25, 24]})
+    with pytest.raises(ValueError, match='死亡状态'):
+        clinical.check_death(mapped, mapped, config, tmp_path, 'validation')
+    audit = pd.read_csv(tmp_path / 'audit/death_conflicts.tsv', sep='\t')
+    assert set(audit.loc[audit.action.eq('blocked'), 'subject_id']) == {'other'}
+
+
+def test_prepare_counts_outcome_exclusion_separately_from_missingness(tmp_path, config, monkeypatch):
+    config['clinical']['cohorts']['validation'] = deepcopy(config['clinical']['cohorts']['discovery'])
+    config['clinical']['cohorts']['validation']['death'] = {'mrs_conflict_policy': 'exclude_mrs_moca'}
+    config['statistics']['families']['mrs_single'].update(enabled=True, outcomes=['mrs_3m', 'mrs_6m'])
+    config['statistics']['families']['moca']['enabled'] = True
+    original = raw_frame(config)
+    original[config['clinical']['variables']['mrs_3m']['field']] = [6, 6, 2]
+    original[config['clinical']['variables']['mrs_6m']['field']] = [1, 4, 1]
+    monkeypatch.setattr(clinical, 'read_sas', lambda path: (original.copy(), {}))
+    (tmp_path / 'clinical/validation').mkdir(parents=True)
+    (tmp_path / 'clinical/validation/data.sas7bdat').write_bytes(b'synthetic')
+    feature_dir = tmp_path / 'features'
+    feature_dir.mkdir()
+    # 第二个矛盾病例没有有效影像：来源审计 2 人，结局样本流向只计影像匹配的 1 人。
+    features = pd.DataFrame({'subject_id': ['0001', '0003'], **{
+        f'{channel}_{mode:03d}': [.01, .02] for channel in ['g', 'w'] for mode in range(1, 130)}})
+    features.to_csv(feature_dir / 'mode_features.tsv.gz', sep='\t', index=False)
+    pd.DataFrame({'subject_id': features.subject_id, 'lesion_volume_mm3': [10, 20]}).to_csv(
+        feature_dir / 'summary.tsv', sep='\t', index=False)
+    clinical.prepare_clinical(tmp_path, config, feature_dir, tmp_path / 'out', 'validation')
+    analysis = pd.read_csv(tmp_path / 'out/analysis.tsv.gz', sep='\t', dtype={'subject_id': str})
+    assert analysis.subject_id.tolist() == ['0001', '0003']
+    assert analysis.mrs_moca_outcome_excluded.tolist() == [1, 0]
+    flow = pd.read_csv(tmp_path / 'out/audit/sample_flow.tsv', sep='\t').set_index('outcome')
+    assert flow.loc['mrs_3m', 'excluded_outcome'] == 1
+    assert flow.loc['moca_3m', 'excluded_outcome'] == 1
+    assert flow.loc['nihss_1a', 'excluded_outcome'] == 0
+    assert flow.loc['nihss_1a', 'observed_outcome'] == 2
+    assert (flow.excluded_outcome + flow.observed_outcome + flow.missing_outcome == flow.image_matched).all()
+    exclusions = pd.read_csv(tmp_path / 'out/audit/outcome_exclusions.tsv', sep='\t')
+    assert len(exclusions) == 2
+
+
 def test_prepare_preserves_id_and_observed_outcomes(tmp_path, config, monkeypatch):
     make_root(tmp_path)
     original = raw_frame(config)

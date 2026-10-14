@@ -42,7 +42,29 @@
 
 死亡状态只由对应随访的 mRS 是否等于 6 推断，不读取独立 death 字段或另行配置死亡编码。记录 death_<month>m 状态；mRS=6 后再次出现非缺失的非 6 mRS 会被报告为冲突。mRS 缺失不自动补成 6，也不因缺失推断死亡。
 
-死亡后缺失 MoCA 额外标记 `moca_*m_structural_missing`，不插补、不记零。`clinical.death.moca_conflict_policy` 默认 `error`，死后非缺失 MoCA 会停止临床阶段。研究者明确确认按 mRS=6 处理后，可设为 `structural_missing`：仅将首次 mRS=6 当次及之后的 MoCA 设为结构性缺失，保留患者、全部 mRS 和死亡之前的 MoCA，不改写原始 SAS。`audit/death_conflicts.tsv` 保留处理前的映射分数、首次记录死亡的月份、处理动作和策略；它不是对原始死亡日期的核实。任何死亡后出现非缺失非 6 的 mRS 仍然停止，不能用该选项绕过。MoCA 已在上游完成教育加分；本项目不识别版本、不重复加分。死亡规则只对启用分析所需月份执行。
+死亡后缺失 MoCA 额外标记 `moca_*m_structural_missing`，不插补、不记零。`clinical.death.moca_conflict_policy` 默认 `error`，死后非缺失 MoCA 会停止临床阶段。研究者明确确认按 mRS=6 处理后，可设为 `structural_missing`：仅将首次 mRS=6 当次及之后的 MoCA 设为结构性缺失，保留患者、全部 mRS 和死亡之前的 MoCA，不改写原始 SAS。`audit/death_conflicts.tsv` 保留处理前的映射分数、首次记录死亡的月份、处理动作和策略；它不是对原始死亡日期的核实。该选项本身不允许跨月 mRS 死亡矛盾。MoCA 已在上游完成教育加分；本项目不识别版本、不重复加分。死亡规则只对启用分析所需月份执行。
+
+### 对 mRS 死亡矛盾患者作结局排除
+
+`clinical.death.mrs_conflict_policy` 默认 `error`。只有研究者明确决定排除时，才设为 `exclude_mrs_moca`；可在 `clinical.cohorts.<队列>.death` 中覆盖此项。仅对验证集启用的配置如下，合并到已有同名分区，不重复创建 `clinical` 或 `validation`：
+
+```yaml
+clinical:
+  cohorts:
+    validation:
+      death:
+        mrs_conflict_policy: exclude_mrs_moca
+```
+
+程序扫描所需 mRS 月份，找到首次 mRS=6 后再次出现非缺失非 6 mRS 的患者，写入 `mrs_moca_outcome_excluded: 1`。这些患者的所有 mRS 和 MoCA 访视，包括矛盾发生前的访视，都退出结局分析；该规则也适用于纵向 mRS、组合学习和外部验证。患者行、影像、协变量、NIHSS 以及处理前的 mRS/MoCA 分数保留。矛盾患者的推断死亡标记置空，不将其认定为已核实死亡，也不再把其 MoCA 按死亡规则改写。没有 mRS 矛盾的患者继续使用原 MoCA 策略。
+
+R 的共同 `endpoint_data` 入口先按结局筛选患者，再插补协变量、分折和拟合；排除标记本身不插补，结局也不插补。旧表没有排除标记时保持原行为，因此必须同时更新 Python 临床模块与 R 筛选模块，并从 clinical 及下游续跑。
+
+- `audit/death_conflicts.tsv`：逐条冲突、处理前映射分数、首次 mRS=6 月份、`action=exclude_mrs_moca`。
+- `audit/outcome_exclusions.tsv`：每名患者一行，记录队列、原因、冲突条数以及全部已映射 mRS/MoCA 分数。此清单基于临床来源，可能包括没有有效影像者。
+- `audit/sample_flow.tsv`：基于影像与临床匹配者，满足 `image_matched = excluded_outcome + observed_outcome + missing_outcome`；普通结局缺失和人为结局排除分列。模型实际人数可能进一步受到原有有效性检查影响。
+
+不会硬编码人数、强行凑满样本量或覆盖原 SAS。此处理是研究者选择的结局排除规则，并不证明哪次原始随访记录错误。
 
 ## 3. 逐步代码核查表
 

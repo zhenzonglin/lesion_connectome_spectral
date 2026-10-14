@@ -62,7 +62,7 @@ G/W/Jmax属于本项目的损伤指标扩展，Preti文献提供健康谐波定�
 
 详细字段和代码逐步表见 `docs/clinical.md`。顺序为 `preflight_clinical → load_sources/normalize_ids/read_sas → map_variables → check_death → derive_variables → prepare_clinical`。主要包是pyreadstat、pandas、NumPy。
 
-SAS导入保留标签和特殊缺失元信息；不根据字段顺序合并，不默认取重复第一条。每个来源使用明确base/append/join操作。发现与验证的原始队列成员做重叠检查，不能只检查影像成功者。单独的NIHSS `9`不可测编码按字段处理。死亡冲突默认报错；研究者显式配置 `clinical.death.moca_conflict_policy: structural_missing` 后，死后MoCA原分数保留审计并设为结构性缺失，患者和其他有效记录保留。跨月份mRS死亡矛盾仍报错；结局均不插补。
+SAS导入保留标签和特殊缺失元信息；不根据字段顺序合并，不默认取重复第一条。每个来源使用明确base/append/join操作。发现与验证的原始队列成员做重叠检查，不能只检查影像成功者。单独的NIHSS `9`不可测编码按字段处理。死亡冲突默认报错；研究者显式配置 `clinical.death.moca_conflict_policy: structural_missing` 后，死后MoCA原分数保留审计并设为结构性缺失，患者和其他有效记录保留。跨月份mRS死亡矛盾默认报错；另经研究者明确选择，可设置 `clinical.cohorts.validation.death.mrs_conflict_policy: exclude_mrs_moca`，仅将该队列矛盾患者的全部 mRS/MoCA 结局排除，保留患者及其他分析。原分数、逐条冲突、逐人排除清单和样本流向均保留；结局均不插补。
 
 输出在临床阶段的 `discovery/analysis.tsv.gz` 和 `validation/analysis.tsv.gz`，列包括subject_id、258个g/w特征、原始体积和内部临床变量。`audit/`保存缺失、来源冲突、未匹配与样本流向。一个结局缺失不删除该人在其他结局的记录；筛选发生在下一步每个结局内。
 
@@ -71,7 +71,7 @@ SAS导入保留标签和特殊缺失元信息；不根据字段顺序合并，�
 | R函数位置 | 输入 | 处理 | 产物及审核项 |
 |---|---|---|---|
 | `statistics/common.R::read_input,prepare_types` | analysis.tsv.gz、类型字典 | 保持ID文本；连续转数值；分类按明确levels编码 | 内存模型数据；不修改原始SAS |
-| `statistics/imputation.R::endpoint_data` | 一项结局、协变量、完整G/W | 仅该结局已观察且影像完整者；必要协变量整列缺失/常量明确报错 | 固定患者名单，129模态复用 |
+| `statistics/imputation.R::endpoint_data` | 一项结局、协变量、完整G/W、结局排除标记 | 先执行 mRS/MoCA 全访视排除，再选已观察结局和完整影像；其他结局不使用该标记；必要协变量整列缺失/常量明确报错 | 插补、关联、组合和外部验证共用固定患者名单，129模态复用 |
 | `imputation_frame,mi_method` | 固定名单 | 推断MI含观察结局、G/W和其他协变量；纵向使用宽表观察状态辅助；只有协变量where允许填补 | methods.csv、predictor_matrix_requested.csv |
 | `build_imputations` | 配置m、初始/递增/最大迭代、种子 | mice::mice/mice.mids；保存批次检查点；pmm/logreg/polyreg/polr | compact imputations.rds、participants.csv、actual predictor matrix、logged_events.csv |
 | `rank_split_psrf,mi_diagnostics` | 各链均值/方差轨迹 | 秩归一化/分链PSRF；不完整诊断不算通过；超阈值递增迭代到上限 | chain_traces.rds、chain_diagnostics.csv、diagnostics.json |

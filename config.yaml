@@ -537,6 +537,8 @@ clinical:
     mrs_death_value: 6
     # 研究者确认后可设 structural_missing：审计死后 MoCA 原分数并设为结构性缺失；mRS 冲突仍停止。
     moca_conflict_policy: error
+    # 可在 clinical.cohorts.<队列>.death 下单独覆盖；确认后用 exclude_mrs_moca 排除矛盾患者的全部 mRS/MoCA 结局。
+    mrs_conflict_policy: error
     times:
       3:
         outcome: mrs_3m
