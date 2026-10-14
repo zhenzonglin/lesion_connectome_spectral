@@ -1,8 +1,8 @@
 # 工作站轻量更新分支
 
-本分支使用独立历史，只包含 5 个代码更新文件、SHA256 清单、维护脚本和测试；没有主分支历史、参考图谱、环境、病灶、SAS 或患者结果。适用于已经部署的 lesion_connectome_spectral 项目，不能独立运行分析。
+本分支使用独立历史，只包含 6 个代码更新文件、SHA256 清单、维护脚本和测试；没有主分支历史、参考图谱、环境、病灶、SAS 或患者结果。适用于已经部署的 lesion_connectome_spectral 项目，不能独立运行分析。
 
-代码来源：`7cf4af23aa030a114235a1d847a26956f82acb9e`。内容包括病灶调度修复、60 工作进程支持、30 秒持续监控、分队列人数表，续跑时不把上轮计数显示为本轮状态，以及显式启用并审计死后 MoCA 的结构性缺失处理。
+代码来源：`022458814a3d673caa7ba82769bc8384a19bb94b`。内容包括病灶调度修复、60 工作进程支持、30 秒持续监控、分队列人数表，续跑时不把上轮计数显示为本轮状态，以及显式启用并审计死后 MoCA 的结构性缺失处理和按队列排除 mRS 矛盾患者的 mRS/MoCA 结局。
 
 ## 一次完整的停止、检查与续跑
 
@@ -42,7 +42,7 @@ cd "$LCS_ROOT"
   --project "$LCS_ROOT" --config "$LCS_CONFIG"
 ```
 
-安装前核查停止状态、补丁 SHA256 和 Python 语法；旧代码备份到 `archive/workstation_updates/`，再替换五个白名单文件。异常时恢复已替换文件。配置、病灶、SAS、参考资源、环境和已有结果均保留。`functions/cohort.py` 不在补丁中，工作站已做的递归扫描修改会保留。
+安装前核查停止状态、补丁 SHA256、Python 和 R 语法；旧代码备份到 `archive/workstation_updates/`，再替换六个白名单文件，包括 `functions/clinical.py` 和 `statistics/imputation.R`。异常时恢复已替换文件。配置、病灶、SAS、参考资源、环境和已有结果均保留。`functions/cohort.py` 不在补丁中，工作站已做的递归扫描修改会保留。
 
 ### 4. 启动前检查
 
@@ -85,7 +85,7 @@ cd "$LCS_ROOT"
 moca_conflict_policy: structural_missing
 ```
 
-该选项将首次 mRS=6 当次及之后的非缺失 MoCA 设为结构性缺失，保留患者、全部 mRS 和死亡前有效分数，不修改原始 SAS。`audit/death_conflicts.tsv` 记录处理前的映射分数、首次记录死亡的月份、处理动作和策略；日志输出涉及人数及观测条数。死亡后出现非死亡 mRS 的矛盾仍停止。其他可用结局不因这项处理而删除，结局不插补。
+该选项将首次 mRS=6 当次及之后的非缺失 MoCA 设为结构性缺失，保留患者、全部 mRS 和死亡前有效分数，不修改原始 SAS。`audit/death_conflicts.tsv` 记录处理前的映射分数、首次记录死亡的月份、处理动作和策略；日志输出涉及人数及观测条数。死亡后出现非死亡 mRS 的矛盾默认仍停止；下面的结局排除是独立选项。其他可用结局不因 MoCA 缺失处理而删除，结局不插补。
 
 安装代码并设置策略后，可使用原运行名仅续跑临床及下游，病灶输入和代码一致时复用病灶结果：
 
@@ -96,6 +96,49 @@ moca_conflict_policy: structural_missing
   --resume --detach
 ```
 
+## 验证集 mRS 矛盾患者的结局排除
+
+研究者选择：存在跨月 mRS 死亡矛盾的验证集患者退出全部 mRS 和 MoCA 结局分析，保留其他分析及审计。不要删除患者的临床行或病灶文件，也不要将后续 mRS 回填为 6。默认仍为严格拦截；在工作站现有 `config.workstation.yaml` 的 `clinical.cohorts.validation` 下加入以下 `death` 子项：
+
+```yaml
+clinical:
+  cohorts:
+    validation:
+      death:
+        mrs_conflict_policy: exclude_mrs_moca
+```
+
+这是定位示例，请合并到已有分区，不新增重复的 `clinical`/`validation`。保留验证集原来的 ID 和字段映射，也保留已确认的 `clinical.death.moca_conflict_policy: structural_missing`。发现集默认仍拦截 mRS 矛盾。
+
+更新顺序：先 `git -C "$LCS_PATCH" pull --ff-only origin hotfix/workstation-lite`，再执行本页的 `stop`、`install`，修改配置并续跑 clinical 及下游。安装同时更新 Python 标记和 R 筛选；只设置 YAML 而未更新这两个文件不会实现排除。
+
+患者及处理前分数仍保存在分析宽表；`mrs_moca_outcome_excluded=1` 在 R 的结局入口排除所有 mRS/MoCA 访视，包括早期访视和纵向 mRS。筛选发生在插补、拟合、组合学习和外部验证之前。NIHSS 等其他结局不使用这个排除标记。矛盾患者的推断死亡标记置空，不将其当成已核实死亡。
+
+完成 clinical 后，在项目根目录执行下列只读核验；始终使用本轮阶段指针，不从旧目录取审计：
+
+```bash
+./env/bin/python - <<'PY'
+import json
+from pathlib import Path
+import pandas as pd
+root = Path.cwd()
+state = json.loads((root / 'results/main_20261014/stages.json').read_text())
+record = state['stages']['clinical']
+print('本轮 clinical 状态:', record['status'])
+if record['status'] != 'completed':
+    raise SystemExit('等待 clinical 完成；若失败，请查看本轮 execution.log。')
+folder = root / record['path'] / 'validation'
+exclusions = pd.read_csv(folder / 'audit/outcome_exclusions.tsv', sep='\t', dtype={'subject_id': str})
+print('临床来源中排除人数:', exclusions.subject_id.nunique())
+print('涉及 mRS 冲突条数:', int(exclusions.conflict_records.sum()))
+print('排除清单:', folder / 'audit/outcome_exclusions.tsv')
+flow = pd.read_csv(folder / 'audit/sample_flow.tsv', sep='\t')
+print(flow[['outcome', 'image_matched', 'excluded_outcome', 'observed_outcome', 'missing_outcome']].to_string(index=False))
+PY
+```
+
+针对已报告的这批记录，临床来源预期为 23 人、25 条冲突；实际以本轮审计为准。`excluded_outcome` 只统计有有效影像并匹配到临床的患者，可能少于来源排除人数。排除规则不硬编码 23，也不据此推定最终模型样本量。发现集先前 7 人的 8 条死后 MoCA 结构性缺失策略保持有效。
+
 ## 开发验证
 
-在现有项目根目录执行 `./env/bin/python -m pytest "$LCS_PATCH/tests" -q`。测试覆盖进程范围、子进程退出、残留 worker、运行锁、安装备份、SHA256、失败回滚及图像头检查。测试使用临时项目和模拟进程，不能替代工作站的真实数据检查。
+在现有项目根目录执行 `./env/bin/python -m pytest "$LCS_PATCH/tests" -q`。测试覆盖进程范围、子进程退出、残留 worker、运行锁、安装备份、SHA256、R 语法拒绝、失败回滚及图像头检查。测试使用临时项目和模拟进程，不能替代工作站的真实数据检查。

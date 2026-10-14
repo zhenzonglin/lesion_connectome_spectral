@@ -10,6 +10,7 @@ import json
 import os
 from pathlib import Path
 import shutil
+import subprocess
 import sys
 import tempfile
 import time
@@ -18,7 +19,7 @@ import psutil
 
 PACKAGE = Path(__file__).resolve().parent
 PAYLOAD_FILES = {'monitor.py', 'run.py', 'functions/pipeline.py',
-                 'functions/configuration.py', 'functions/clinical.py'}
+                 'functions/configuration.py', 'functions/clinical.py', 'statistics/imputation.R'}
 
 
 def sha256(path):
@@ -210,8 +211,20 @@ def verified_payload(package=PACKAGE):
             raise ValueError(f'补丁文件路径越界：{name}')
         if sha256(path) != detail['sha256']:
             raise ValueError(f'补丁校验失败：{name}')
-        compile(path.read_bytes(), str(path), 'exec')
+        if path.suffix == '.py':
+            compile(path.read_bytes(), str(path), 'exec')
     return manifest
+
+
+def verify_r_syntax(root, package=PACKAGE):
+    """仅解析 R 补丁，不执行分析；缺少运行时或语法错误时不安装。"""
+    rscript = root / 'env/bin/Rscript'
+    if not rscript.is_file():
+        raise ValueError(f'缺少项目 R 运行时：{rscript}')
+    subprocess.run([str(rscript), '--vanilla', '-e',
+                    'invisible(parse(file=commandArgs(TRUE)[1]))',
+                    str(package / 'payload/statistics/imputation.R')],
+                   check=True, capture_output=True, text=True, timeout=30)
 
 
 def install(root, config, package=PACKAGE):
@@ -221,6 +234,7 @@ def install(root, config, package=PACKAGE):
         target = root / name
         if not target.is_file() or not target.resolve().is_relative_to(root):
             raise ValueError(f'安装目标不存在或位于项目之外：{target}')
+    verify_r_syntax(root, package)
     base = root / 'archive/workstation_updates'
     if not base.resolve().is_relative_to(root):
         raise ValueError('代码备份目录不能位于项目之外')
@@ -275,6 +289,7 @@ def check_header(path, tolerance):
 def check(root, config, workers, package=PACKAGE):
     require_stopped(root, config)
     manifest = verified_payload(package)
+    verify_r_syntax(root, package)
     for name, detail in manifest['files'].items():
         if sha256(root / name) != detail['sha256']:
             raise ValueError(f'代码与本补丁不一致，请先 install：{name}')

@@ -424,10 +424,15 @@ def derive_variables(frame: pd.DataFrame, derived: dict) -> pd.DataFrame:
 
 
 def check_death(raw: pd.DataFrame, mapped: pd.DataFrame, config: dict, output_dir: Path, cohort: str = "discovery") -> pd.DataFrame:
-    """仅由对应月份 mRS=6 推断死亡；死后 MoCA 作为结构性缺失。"""
-    policy = config['clinical'].get('death', {}).get('moca_conflict_policy', 'error')
+    """核查死亡冲突；结局排除保留患者和分数，由统计入口执行筛选。"""
+    death_settings = config['clinical'].get('death', {})
+    policy = death_settings.get('moca_conflict_policy', 'error')
     if policy not in ['error', 'structural_missing']:
         raise ValueError('clinical.death.moca_conflict_policy 必须为 error 或 structural_missing')
+    cohort_death = config['clinical'].get('cohorts', {}).get(cohort, {}).get('death', {})
+    mrs_policy = cohort_death.get('mrs_conflict_policy', death_settings.get('mrs_conflict_policy', 'error'))
+    if mrs_policy not in ['error', 'exclude_mrs_moca']:
+        raise ValueError('mrs_conflict_policy 必须为 error 或 exclude_mrs_moca')
     result = mapped.copy()
     conflicts = []
     required = required_variables(config)
@@ -438,42 +443,76 @@ def check_death(raw: pd.DataFrame, mapped: pd.DataFrame, config: dict, output_di
         for name in required
         if re.fullmatch(r"mrs_\d+m", name)
     )
+    death_by_month = {}
+    conflict_counts = pd.Series(0, index=result.index, dtype=int)
+    # 先扫描全部访视，确保较晚发现的矛盾也排除该人的早期 mRS/MoCA。
     for month in months:
-        mrs, moca = f"mrs_{month}m", f"moca_{month}m"
+        mrs = f"mrs_{month}m"
         if mrs not in result:
             continue
         values = pd.to_numeric(result[mrs], errors="coerce")
         dead_now = values.eq(6)
         first_death.loc[dead_now & ~previous_dead] = month
         alive_after_death = previous_dead & values.notna() & ~dead_now
+        conflict_counts += alive_after_death.astype(int)
         for index in result.index[alive_after_death]:
             conflicts.append({"subject_id": result.loc[index, "subject_id"],
                               "month": month, "reason": "mrs_observed_after_prior_death",
                               "original_value": values.loc[index],
                               "first_death_month": int(first_death.loc[index]),
-                              "action": "blocked", "policy": policy})
+                              "action": "exclude_mrs_moca" if mrs_policy == 'exclude_mrs_moca' else "blocked",
+                              "policy": mrs_policy})
         dead = previous_dead | dead_now
-        result[f"death_{month}m"] = dead.astype(float)
+        death_by_month[month] = dead
+        previous_dead = dead
+    excluded = conflict_counts.gt(0) & (mrs_policy == 'exclude_mrs_moca')
+    # 0/1 标记在 Python/R TSV 接口中保持明确；不把排除伪装成普通缺失。
+    result['mrs_moca_outcome_excluded'] = excluded.astype(int)
+    score_columns = [name for name in mapped if re.fullmatch(r'(mrs|moca)_\d+m', name)]
+    exclusions = [{
+        'subject_id': mapped.loc[index, 'subject_id'], 'cohort': cohort,
+        'reason': 'mrs_observed_after_prior_death', 'conflict_records': int(conflict_counts.loc[index]),
+        'first_death_month': int(first_death.loc[index]), 'action': 'exclude_mrs_moca',
+        'policy': mrs_policy, **{name: mapped.loc[index, name] for name in score_columns},
+    } for index in result.index[excluded]]
+    write_audit(output_dir, 'outcome_exclusions', exclusions,
+                ['subject_id', 'cohort', 'reason', 'conflict_records', 'first_death_month',
+                 'action', 'policy', *score_columns])
+    for month, dead in death_by_month.items():
+        moca = f"moca_{month}m"
+        # 矛盾患者不作死亡状态断言；其原 mRS/MoCA 保留供审计，所有访视均退出这两类结局。
+        result[f"death_{month}m"] = dead.astype(float).mask(excluded)
+        structural = dead & ~excluded
         if moca in result:
-            for index in result.index[dead & result[moca].notna()]:
+            for index in result.index[structural & result[moca].notna()]:
                 conflicts.append({"subject_id": result.loc[index, "subject_id"],
                                   "month": month, "reason": "moca_observed_after_death",
                                   "original_value": result.loc[index, moca],
                                   "first_death_month": int(first_death.loc[index]),
                                   "action": "set_structural_missing" if policy == 'structural_missing' else "blocked",
                                   "policy": policy})
-            result.loc[dead, moca] = np.nan
-            result[f"{moca}_structural_missing"] = dead
-        previous_dead = dead
+            result.loc[structural, moca] = np.nan
+            result[f"{moca}_structural_missing"] = structural
     write_audit(output_dir, "death_conflicts", conflicts,
                 ["subject_id", "month", "reason", "original_value", "first_death_month", "action", "policy"])
     if any(item['action'] == 'blocked' for item in conflicts):
         raise ValueError("死亡状态与临床结局冲突，见 audit/death_conflicts.tsv")
-    if conflicts:
-        count = len({item['subject_id'] for item in conflicts})
-        print(f'{cohort}: 已按 mRS=6 规则将 {count} 人的 {len(conflicts)} 条 MoCA '
+    if exclusions:
+        print(f'{cohort}: {int(excluded.sum())} 人涉及 {int(conflict_counts[excluded].sum())} 条 mRS 冲突；'
+              f'已标记排除其全部 mRS/MoCA 结局，保留其他分析；见 {output_dir}/audit/outcome_exclusions.tsv', flush=True)
+    resolved_moca = [item for item in conflicts if item['action'] == 'set_structural_missing']
+    if resolved_moca:
+        count = len({item['subject_id'] for item in resolved_moca})
+        print(f'{cohort}: 已按 mRS=6 规则将 {count} 人的 {len(resolved_moca)} 条 MoCA '
               f'设为结构性缺失；处理前分数和操作见 {output_dir}/audit/death_conflicts.tsv', flush=True)
     return result
+
+
+def outcome_excluded(frame: pd.DataFrame, name: str) -> pd.Series:
+    """仅 mRS/MoCA 结局使用排除标记；不删除患者或其 NIHSS/影像。"""
+    if re.match(r'^(mrs|moca)(_|$)', name) and 'mrs_moca_outcome_excluded' in frame:
+        return frame['mrs_moca_outcome_excluded'].eq(1)
+    return pd.Series(False, index=frame.index)
 
 
 def assert_disjoint(discovery_ids: set[str], validation_ids: set[str]) -> None:
@@ -533,15 +572,19 @@ def prepare_clinical(root: Path, config: dict, feature_dir: Path, output_dir: Pa
     definitions = outcome_definitions(config)
     flow = []
     for outcome in definitions:
+        excluded = outcome_excluded(integrated, outcome['name'])
         if outcome["name"] == "mrs_longitudinal":
             observed = integrated[list(config["statistics"]["families"]["mrs_longitudinal"]["visits"])].notna().any(axis=1)
         else:
             observed = integrated[outcome["name"]].notna()
-        flow.append({"outcome": outcome["name"], "family": outcome["family"], "image_matched": len(integrated), "observed_outcome": int(observed.sum()), "missing_outcome": int((~observed).sum()), "covariate_missing": int(integrated.loc[observed,outcome["covariates"]].isna().any(axis=1).sum())})
+        flow.append({"outcome": outcome["name"], "family": outcome["family"], "image_matched": len(integrated),
+                     "excluded_outcome": int(excluded.sum()), "observed_outcome": int((observed & ~excluded).sum()),
+                     "missing_outcome": int((~observed & ~excluded).sum()),
+                     "covariate_missing": int(integrated.loc[observed & ~excluded,outcome["covariates"]].isna().any(axis=1).sum())})
     write_audit(output_dir, "sample_flow", flow)
     available_variables = [
         column for column in integrated.columns
-        if column not in feature_columns and integrated[column].notna().any()
+        if column not in feature_columns and integrated.loc[~outcome_excluded(integrated, column), column].notna().any()
     ]
     result = {"status":"complete", "cohort":cohort, "n":len(integrated), "clinical_n":len(raw),
               "feature_columns":feature_columns, "outcomes":definitions,

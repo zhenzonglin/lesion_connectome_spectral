@@ -2,6 +2,7 @@ from pathlib import Path
 import json
 import os
 import signal
+import shutil
 import subprocess
 import sys
 import time
@@ -114,7 +115,10 @@ def target(tmp_path):
     root = tmp_path / 'target'
     (root / 'functions').mkdir(parents=True)
     for name in ws.PAYLOAD_FILES:
+        (root / name).parent.mkdir(parents=True, exist_ok=True)
         (root / name).write_text('# old code\n')
+    (root / 'env/bin').mkdir(parents=True)
+    (root / 'env/bin/Rscript').symlink_to(Path(sys.executable).parent / 'Rscript')
     (root / 'config.workstation.yaml').write_text('private configuration\n')
     (root / 'results').mkdir()
     (root / 'results/private.txt').write_text('private result\n')
@@ -169,6 +173,20 @@ def test_tampered_manifest_is_rejected(tmp_path):
     (tmp_path / 'manifest.json').write_text(json.dumps({'files': {'../config.yaml': {}}}))
     with pytest.raises(ValueError, match='代码文件'):
         ws.verified_payload(tmp_path)
+
+
+def test_bad_r_syntax_is_rejected_before_replacing_any_files(target, tmp_path):
+    package = tmp_path / 'package'
+    shutil.copytree(ws.PACKAGE / 'payload', package / 'payload')
+    manifest = ws.verified_payload()
+    changed = package / 'payload/statistics/imputation.R'
+    changed.write_text('broken <- function(\n')
+    manifest['files']['statistics/imputation.R']['sha256'] = ws.sha256(changed)
+    (package / 'manifest.json').write_text(json.dumps(manifest))
+    with pytest.raises(subprocess.CalledProcessError):
+        ws.install(target, {'paths': {'results': 'results'}}, package)
+    assert not (target / 'archive').exists()
+    assert all((target / name).read_text() == '# old code\n' for name in ws.PAYLOAD_FILES)
 
 
 @pytest.mark.parametrize('scale,shape,valid', [(1, (2, 2, 2), True),
