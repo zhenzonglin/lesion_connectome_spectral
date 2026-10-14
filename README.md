@@ -1,8 +1,8 @@
 # 工作站轻量更新分支
 
-本分支是独立根提交，只包含 4 个代码更新文件、SHA256 清单、维护脚本和测试；没有主分支历史、参考图谱、环境、病灶、SAS 或患者结果。适用于已经部署的 lesion_connectome_spectral 项目，不能独立运行分析。
+本分支使用独立历史，只包含 5 个代码更新文件、SHA256 清单、维护脚本和测试；没有主分支历史、参考图谱、环境、病灶、SAS 或患者结果。适用于已经部署的 lesion_connectome_spectral 项目，不能独立运行分析。
 
-代码来源：`ecf0800ed2d3b28baecdc04cf4e6681fd278ee24`。内容包括病灶调度修复、60 工作进程支持、30 秒持续监控、分队列人数表，以及续跑时不把上轮计数显示为本轮状态。
+代码来源：`7cf4af23aa030a114235a1d847a26956f82acb9e`。内容包括病灶调度修复、60 工作进程支持、30 秒持续监控、分队列人数表，续跑时不把上轮计数显示为本轮状态，以及显式启用并审计死后 MoCA 的结构性缺失处理。
 
 ## 一次完整的停止、检查与续跑
 
@@ -42,7 +42,7 @@ cd "$LCS_ROOT"
   --project "$LCS_ROOT" --config "$LCS_CONFIG"
 ```
 
-安装前核查停止状态、补丁 SHA256 和 Python 语法；旧代码备份到 `archive/workstation_updates/`，再替换四个白名单文件。异常时恢复已替换文件。配置、病灶、SAS、参考资源、环境和已有结果均保留。
+安装前核查停止状态、补丁 SHA256 和 Python 语法；旧代码备份到 `archive/workstation_updates/`，再替换五个白名单文件。异常时恢复已替换文件。配置、病灶、SAS、参考资源、环境和已有结果均保留。`functions/cohort.py` 不在补丁中，工作站已做的递归扫描修改会保留。
 
 ### 4. 启动前检查
 
@@ -75,6 +75,25 @@ cd "$LCS_ROOT"
 ```bash
 ./env/bin/python "$LCS_PATCH/workstation.py" status \
   --project "$LCS_ROOT" --config "$LCS_CONFIG"
+```
+
+## 已确认的死后 MoCA 处理
+
+临床更新支持 `clinical.death.moca_conflict_policy`。默认或 `error` 保持严格拦截。研究者明确确认按 mRS=6 处理后，在现有配置的 `clinical.death` 中加入：
+
+```yaml
+moca_conflict_policy: structural_missing
+```
+
+该选项将首次 mRS=6 当次及之后的非缺失 MoCA 设为结构性缺失，保留患者、全部 mRS 和死亡前有效分数，不修改原始 SAS。`audit/death_conflicts.tsv` 记录处理前的映射分数、首次记录死亡的月份、处理动作和策略；日志输出涉及人数及观测条数。死亡后出现非死亡 mRS 的矛盾仍停止。其他可用结局不因这项处理而删除，结局不插补。
+
+安装代码并设置策略后，可使用原运行名仅续跑临床及下游，病灶输入和代码一致时复用病灶结果：
+
+```bash
+./env/bin/python run.py --config "$LCS_CONFIG" --run "$LCS_RUN" \
+  --subjects all \
+  --stages clinical,imputation,association,patterns,validation,annotation,report \
+  --resume --detach
 ```
 
 ## 开发验证

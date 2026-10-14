@@ -167,7 +167,7 @@ def test_install_rolls_back_after_replace_failure(target, monkeypatch):
 
 def test_tampered_manifest_is_rejected(tmp_path):
     (tmp_path / 'manifest.json').write_text(json.dumps({'files': {'../config.yaml': {}}}))
-    with pytest.raises(ValueError, match='四个文件'):
+    with pytest.raises(ValueError, match='代码文件'):
         ws.verified_payload(tmp_path)
 
 

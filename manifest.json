@@ -1,5 +1,5 @@
 {
-  "source_commit": "ecf0800ed2d3b28baecdc04cf4e6681fd278ee24",
+  "source_commit": "7cf4af23aa030a114235a1d847a26956f82acb9e",
   "branch": "hotfix/workstation-lite",
   "files": {
     "monitor.py": {
@@ -17,6 +17,10 @@
     "functions/configuration.py": {
       "sha256": "107077f7239d938e25b80c82e4ed9eba0e52641f994b3d783292dabfc4acbfaa",
       "bytes": 8131
+    },
+    "functions/clinical.py": {
+      "sha256": "8b9bea858635d0a4500fa379939bcfba9432d733906d7a8d4e00f3c60329ee1a",
+      "bytes": 29723
     }
   }
 }

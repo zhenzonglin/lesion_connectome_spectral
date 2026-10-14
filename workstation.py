@@ -17,7 +17,8 @@ import time
 import psutil
 
 PACKAGE = Path(__file__).resolve().parent
-PAYLOAD_FILES = {'monitor.py', 'run.py', 'functions/pipeline.py', 'functions/configuration.py'}
+PAYLOAD_FILES = {'monitor.py', 'run.py', 'functions/pipeline.py',
+                 'functions/configuration.py', 'functions/clinical.py'}
 
 
 def sha256(path):
@@ -202,7 +203,7 @@ def require_stopped(root, config):
 def verified_payload(package=PACKAGE):
     manifest = json.loads((package / 'manifest.json').read_text())
     if set(manifest['files']) != PAYLOAD_FILES:
-        raise ValueError('补丁文件列表与允许替换的四个文件不符')
+        raise ValueError('补丁文件列表与允许替换的代码文件不符')
     for name, detail in manifest['files'].items():
         path = package / 'payload' / name
         if not path.resolve().is_relative_to((package / 'payload').resolve()):
