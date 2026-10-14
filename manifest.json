@@ -1,0 +1,22 @@
+{
+  "source_commit": "ecf0800ed2d3b28baecdc04cf4e6681fd278ee24",
+  "branch": "hotfix/workstation-lite",
+  "files": {
+    "monitor.py": {
+      "sha256": "d795e53e2cac2842d0cb481b36859e52f2e16c6af44bf25c2313a67b93bba810",
+      "bytes": 9159
+    },
+    "run.py": {
+      "sha256": "9e14db92e3a2a90d153838a2ed138139fe44a7a028813db4db113dc8918aee95",
+      "bytes": 4848
+    },
+    "functions/pipeline.py": {
+      "sha256": "a36b250797fa3f8bd859996b03741c146a7556d577f90a3129b7e67f52bac102",
+      "bytes": 27752
+    },
+    "functions/configuration.py": {
+      "sha256": "107077f7239d938e25b80c82e4ed9eba0e52641f994b3d783292dabfc4acbfaa",
+      "bytes": 8131
+    }
+  }
+}
