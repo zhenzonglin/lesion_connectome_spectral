@@ -188,6 +188,33 @@ def test_modified_upstream_product_invalidates_downstream_and_report(tmp_path, c
     assert 'old_unique_result' not in (directory / 'report.html').read_text(encoding='utf-8')
 
 
+def test_resume_publishes_current_progress_before_expensive_source_checks(tmp_path, config, monkeypatch):
+    """后台握手后即应读到本次状态，输入哈希检查不能暴露旧失败记录。"""
+    directory, state, args = seeded_pipeline(tmp_path, config, monkeypatch)
+    args.stages = "lesion"
+    state["stages"]["lesion"].update(status="failed", reason="OLD_SCOPE_ERROR")
+    save_json(directory / "stages.json", state)
+    save_json(directory / "progress.json", {"status": "incomplete", "heartbeat": 1, "token": "old"})
+    original_sources = pipeline.stage_sources
+    checks = []
+
+    def sources(root, stage, config, arguments):
+        progress = read_json(directory / "progress.json")
+        control = read_json(directory / "control.json")
+        assert progress["status"] == "running"
+        assert progress["token"] == control["token"] == args.token
+        assert progress["heartbeat"] >= control["started"]
+        if not checks:
+            assert progress["stages"]["lesion"]["status"] == "pending"
+            assert "reason" not in progress["stages"]["lesion"]
+        checks.append(stage)
+        return original_sources(root, stage, config, arguments)
+
+    monkeypatch.setattr(pipeline, "stage_sources", sources)
+    assert pipeline.run_pipeline(tmp_path, args, config) == 0
+    assert checks
+
+
 def test_immediate_stop_tolerates_process_exit_race(tmp_path, monkeypatch):
     """poll 后、killpg 前退出的自有子进程仍按停止处理。"""
     class process:
@@ -232,3 +259,65 @@ def test_preflight_added_inputs_change_signature_without_config_change(tmp_path,
     assert current['lesion']['status'] == 'discovered'
     (clinical_dir/'discovery'/'discovery.sas7bdat').write_bytes(b'changed input content')
     assert fingerprint(pipeline.stage_sources(tmp_path,'preflight',config,args)) != fingerprint(current)
+
+
+@pytest.mark.parametrize("subjects", [None, "all"])
+@pytest.mark.parametrize("stages,cached_preflight", [
+    ("preflight,lesion", False),
+    ("preflight,lesion", True),
+    ("lesion", False),
+])
+def test_lesion_dispatch_with_cached_or_omitted_preflight(
+    tmp_path, config, monkeypatch, subjects, stages, cached_preflight
+):
+    """复用预检或直接运行病灶阶段时，仍须派发两个队列。"""
+    from functions import reference
+
+    monkeypatch.setattr(pipeline, "stage_sources", lambda root, stage, config, args: {"source": stage})
+    monkeypatch.setattr(pipeline, "code_signature", lambda root, stage: {"code": stage})
+    monkeypatch.setattr(pipeline.signal, "signal", lambda *values: None)
+    monkeypatch.setattr(reference, "verify_reference", lambda root: {})
+    monkeypatch.setattr(reference, "load_reference", lambda root, with_index: {})
+    monkeypatch.setattr(reference, "numerical_checks", lambda value: {"synthetic": True})
+    checked_cohorts = []
+
+    def preflight_clinical(root, config, cohort):
+        checked_cohorts.append(cohort)
+        return []
+
+    monkeypatch.setattr(clinical, "preflight_clinical", preflight_clinical)
+    dispatched = []
+
+    def run_child(command, directory, *args):
+        job = read_json(directory / "job_config.json")
+        assert job["active_cohort"] == directory.name
+        dispatched.append(directory.name)
+        (directory / "synthetic_result.txt").write_text(directory.name, encoding="utf-8")
+        save_json(directory / "progress.json", {"status": "completed"})
+        return 0
+
+    monkeypatch.setattr(pipeline, "run_child", run_child)
+    args = SimpleNamespace(run="dispatch_regression", stages="preflight", resume=False,
+                           subjects=subjects, token="test-token")
+    directory = tmp_path / config["paths"]["results"] / args.run
+    if cached_preflight:
+        assert pipeline.run_pipeline(tmp_path, args, config) == 0
+        before = read_json(directory / "stages.json")["stages"]["preflight"]
+        completion = Path(before["path"]) / "complete.json"
+        cached_output = (completion.read_bytes(), completion.stat().st_mtime_ns)
+
+    args.stages = stages
+    args.resume = cached_preflight
+    assert pipeline.run_pipeline(tmp_path, args, config) == 0
+    state = read_json(directory / "stages.json")
+    assert state["status"] == "completed"
+    assert state["stages"]["lesion"]["status"] == "completed"
+    assert dispatched == ["discovery", "validation"]
+    assert checked_cohorts == (["discovery", "validation"] if "preflight" in stages else [])
+    if cached_preflight:
+        assert cached_output == (completion.read_bytes(), completion.stat().st_mtime_ns)
+
+    # 已完成病灶再次续跑须复用产物，不重新派发子进程。
+    args.resume = True
+    assert pipeline.run_pipeline(tmp_path, args, config) == 0
+    assert dispatched == ["discovery", "validation"]

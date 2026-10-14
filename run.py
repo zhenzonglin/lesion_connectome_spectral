@@ -42,8 +42,8 @@ def main() -> int:
     if args.workers is not None:
         config["workers"] = args.workers
         config["runtime"]["workers"] = args.workers
-    if not 1 <= config["workers"] <= 32 or not 1 <= config["threads"] <= 32:
-        raise ValueError("工作进程/线程须在 1—32 之间")
+    if not 1 <= config["workers"] <= 64 or not 1 <= config["threads"] <= 32:
+        raise ValueError("工作进程须在 1—64 之间，线程须在 1—32 之间")
     for name in [
         "OMP_NUM_THREADS",
         "OPENBLAS_NUM_THREADS",

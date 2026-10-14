@@ -258,6 +258,7 @@ def report_pipeline(directory: Path, state: dict) -> None:
 
 
 def run_pipeline(root: Path, args, config: dict) -> int:
+    from functions.cohort import configured_cohorts
     directory = run_directory(root,args.run,config['paths']['results'])
     requested = [part.strip() for part in args.stages.split(',')]
     use_default = requested == ['all']
@@ -278,7 +279,6 @@ def run_pipeline(root: Path, args, config: dict) -> int:
         state = read_json(state_path) if state_path.exists() else {'stages':{}}
         if args.resume and args.subjects is None and state['stages'].get('lesion',{}).get('path'):
             lesion_root = Path(state['stages']['lesion']['path'])
-            from functions.cohort import configured_cohorts
             manifests = [lesion_root / cohort / "manifest.json"
                          for cohort in configured_cohorts(config)]
             subject_ids = []
@@ -288,8 +288,13 @@ def run_pipeline(root: Path, args, config: dict) -> int:
                                        for item in read_json(prior_manifest).get("subjects", []))
             if subject_ids:
                 args.subjects = ",".join(dict.fromkeys(subject_ids))
-        state.update(status='running',heartbeat=time.time())
-        save_json(directory/'control.json',identity(root,args.token))
+        for stage in requested:
+            previous = state['stages'].get(stage)
+            if previous and previous.get('status') != 'completed':
+                previous['status'] = 'pending'
+                previous.pop('reason', None)
+        state.update(status='running',heartbeat=time.time(),token=args.token)
+        controls = identity(root,args.token)
         stopping = {'graceful':False,'immediate':False}
         def on_signal(number,frame):
             stopping['graceful'] = True
@@ -300,6 +305,9 @@ def run_pipeline(root: Path, args, config: dict) -> int:
             state['heartbeat'] = time.time()
             save_json(state_path,state)
             save_json(directory/'progress.json',state)
+        # 后台启动握手只在本次进度发布后完成，避免监控读到前次失败记录。
+        progress()
+        save_json(directory/'control.json',controls)
         for stage in requested:
             request_path = directory/'stop_request.json'
             if request_path.exists() and read_json(request_path).get('token') == args.token:
@@ -354,7 +362,6 @@ def run_pipeline(root: Path, args, config: dict) -> int:
                 if stage == 'preflight':
                     from functions.clinical import preflight_clinical
                     from functions.reference import verify_reference,load_reference,numerical_checks
-                    from functions.cohort import configured_cohorts
                     verify_reference(root)
                     health = numerical_checks(load_reference(root,with_index=False))
                     issues = {cohort:preflight_clinical(root,config,cohort) for cohort in configured_cohorts(config)}

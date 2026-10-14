@@ -725,7 +725,7 @@ annotation:
     colormap_signed: coolwarm
     colormap_loss: magma
 runtime:
-  workers: 4
+  workers: 60
   threads: 1
   stages:
   - preflight
@@ -742,4 +742,4 @@ runtime:
   compact_outputs: true
   patient_qc_images: false
   manual_qc_tables: false
-  monitor_interval_seconds: 10
+  monitor_interval_seconds: 30

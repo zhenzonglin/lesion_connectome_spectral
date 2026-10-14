@@ -13,15 +13,19 @@ bash setup.sh
 ./env/bin/python selftest.py --statistics
 # 编辑 config.yaml，确认输入路径、ID、SAS映射及临床编码后预检。
 ./env/bin/python run.py --run main --preflight
-./env/bin/python run.py --run main --stages preflight,lesion --resume --detach
+./env/bin/python run.py --run main --subjects all --stages preflight,lesion --resume --detach
 # 临床配置完成后执行下游。
-./env/bin/python run.py --run main --stages clinical,imputation,association,patterns,validation,annotation,report --resume --detach
-./env/bin/python monitor.py --run main --watch
+./env/bin/python run.py --run main --subjects all --stages clinical,imputation,association,patterns,validation,annotation,report --resume --detach
+./env/bin/python monitor.py --run main
 ./env/bin/python stop.py --run main
-./env/bin/python run.py --run main --resume --detach
+./env/bin/python run.py --run main --subjects all --resume --detach
 ```
 
-普通停止在当前病例或统计批次检查点退出；`stop.py --now`只终止本任务核验过的进程。续跑冻结原病例清单，不自动新增患者。新增病例请使用新运行名。修改下游统计参数不会重算病灶；修改上游后，依赖阶段标记过期。旧产物按指纹保留，不混写。
+普通停止在当前病例或统计批次检查点退出；`stop.py --now`只终止本任务核验过的进程。当前双队列续跑显式指定`--subjects all`并保持病例目录不变，各队列子流程会核对原病例清单；新增病例请使用新运行名。修改下游统计参数不会重算病灶；修改上游后，依赖阶段标记过期。旧产物按指纹保留，不混写。
+
+`runtime.workers`控制病灶逐例进程数，范围为1–64；`runtime.threads`控制每个进程的数值库线程数，范围为1–32。当前工作站配置为`workers: 60`、`threads: 1`，用于已分配60个CPU且内存足够的任务；其他机器按可用资源调低。并发改变需要安全停止后使用原运行名续跑，已完成的病灶计算可复用。R统计和组合学习目前仍顺序执行，不会随workers增加并行任务数。
+
+监控默认每30秒持续刷新，显示各阶段及discovery/validation病例计数；任务完成、停止或暂未启动时仍继续观察，按Ctrl+C退出监控。`--once`只显示一次，`--watch`保留兼容，`--interval 30`可覆盖旧配置里的刷新间隔。新任务先发布带运行标识的进度再完成后台启动握手；监控会识别前次运行记录，不把旧失败状态当成本次失败。监控只读，不启动或停止分析。
 
 `config.yaml`集中管理所有可调参数，中文说明固定定义。代码按序核查见`docs/code_review.md`，SAS合同见`docs/clinical.md`，统计见`docs/statistics.md`，空间对象见`docs/annotation.md`。
 

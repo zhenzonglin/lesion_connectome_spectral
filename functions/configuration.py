@@ -117,8 +117,8 @@ def load_config(path: Path | str) -> dict:
         elif not id_rule.get("prefix") and not id_rule.get("suffix"):
             raise ValueError(f"{cohort_name} 必须提供 id_rule.prefix/suffix 或 id_regex")
     runtime = config["runtime"]
-    if not 1 <= int(runtime["workers"]) <= 32 or int(runtime["threads"]) < 1:
-        raise ValueError("workers 必须为 1–32，threads 必须为正整数")
+    if not 1 <= int(runtime["workers"]) <= 64 or int(runtime["threads"]) < 1:
+        raise ValueError("workers 必须为 1–64，threads 必须为正整数")
     if set(config["statistics"]["families"]) != {"nihss", "mrs_single", "mrs_longitudinal", "moca"}:
         raise ValueError("正式统计必须显式保留四个预设检验家族（MoCA 3/6/12月共用一个家族）")
     variables = config["clinical"]["variables"]
