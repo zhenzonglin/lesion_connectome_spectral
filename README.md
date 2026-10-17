@@ -4,6 +4,24 @@
 
 代码来源：`022458814a3d673caa7ba82769bc8384a19bb94b`。内容包括病灶调度修复、60 工作进程支持、30 秒持续监控、分队列人数表，续跑时不把上轮计数显示为本轮状态，以及显式启用并审计死后 MoCA 的结构性缺失处理和按队列排除 mRS 矛盾患者的 mRS/MoCA 结局。
 
+## 仅导出汇总审阅包（2026-10-18）
+
+若分析已经完成、只需要将关键结果提供给审阅者，使用独立 `export_review.py`。
+它从当前完成阶段中重建白名单汇总表和健康参考，不打包原始临床资料、患者ID、逐人结果、RDS或原HTML。
+
+```bash
+cd /data/usersdir/linzhenzong/lesion_connectome_spectral || exit 1
+LCS_PATCH=/data/usersdir/linzhenzong/lesion_connectome_spectral_hotfix_20261014
+git -C "$LCS_PATCH" pull --ff-only origin hotfix/workstation-lite || exit 1
+./env/bin/python "$LCS_PATCH/export_review.py" \
+  --project "$PWD" --config config.workstation.yaml --run main_20261014 \
+  --output "$PWD/review_export_$(date +%Y%m%d_%H%M%S).zip"
+```
+
+加 `--dry-run` 可先预览。已有同名ZIP不会覆盖。此脚本直接运行，无需执行下方的 stop/install/check/run，也不向完整工作站项目复制补丁。
+字段合同、隐私排除项和缺失说明见 [审阅导出文档](docs/review_export.md)。
+导出器与测试为独立新增文件；下方原6个payload及其清单保持不变。
+
 ## 一次完整的停止、检查与续跑
 
 以下命令在同一个 Bash 终端依次执行，每步成功后再继续。本次保留原运行名和所有已有结果；更新和检查期间不要从另一个终端启动分析。
